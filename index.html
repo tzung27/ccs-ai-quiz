@@ -522,6 +522,44 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
   </div>
 </section>
 
+<!-- ========== 加分題 ========== -->
+<section class="page" id="p-bonus">
+  <h2>加分題：公司行號常見部門英文縮寫</h2>
+  <p class="zh">名片、組織圖、Email 簽名檔最常看到的部門縮寫。Dept. = Department（部門）。</p>
+  <div class="sub" id="bonus-sub">
+    <button data-s="table" class="active">部門總表</button>
+    <button data-s="tip">易混淆與記憶技巧</button>
+    <button data-s="quiz">加分考題</button>
+  </div>
+  <div id="bonus-table" class="bonus-part"></div>
+  <div id="bonus-tip" class="bonus-part" hidden>
+    <div class="card">
+      <h3>易混淆比較</h3>
+      <div class="tablewrap"><table>
+        <tr><th>比較</th><th>差別</th></tr>
+        <tr><td>QA vs QC</td><td>QA 品質<b>保證</b>：管「流程」，事前預防；QC 品質<b>管制</b>：管「產品」，事後檢驗。</td></tr>
+        <tr><td>IT vs MIS</td><td>IT 偏<b>硬體、網路與技術支援</b>；MIS 偏<b>企業管理資訊系統</b>（如 ERP）。台灣很多公司兩者通用。</td></tr>
+        <tr><td>FIN vs ACCT</td><td>FIN 財務：管「<b>錢的未來</b>」（資金、預算、投資）；ACCT 會計：記「<b>錢的過去</b>」（帳務、報表、稅務）。</td></tr>
+        <tr><td>PR vs IR</td><td>PR 公關：面對<b>大眾與媒體</b>（Public）；IR 投資人關係：面對<b>股東與投資人</b>（Investor）。</td></tr>
+        <tr><td>Admin vs GA</td><td>Admin 行政：公司整體行政管理；GA 總務：辦公用品、設施、庶務。小公司常合併為「行政總務部」。</td></tr>
+        <tr><td>PUR vs SCM</td><td>PUR 採購：負責「<b>買</b>」；SCM 供應鏈管理：從採購、生產到出貨的「<b>整條鏈</b>」。</td></tr>
+        <tr><td>CS 一字多義</td><td>部門名稱多指 Customer Service（客服部）；CSR 可能是 Customer Service Representative（客服人員）或 Corporate Social Responsibility（企業社會責任），要看上下文。</td></tr>
+      </table></div>
+    </div>
+    <div class="card">
+      <h3>記憶技巧</h3>
+      <ul>
+        <li><b>HR</b> = <b>H</b>uman（人）+ <b>R</b>esources（資源）→ 人力資源，找工作、領薪水、請假都找 HR。</li>
+        <li><b>R&amp;D</b>：Research（研究）&amp; Development（開發）→ 研發，「&amp;」讀作 and。</li>
+        <li><b>Q 開頭都跟品質有關</b>：QA 保證（Assurance，事前）、QC 管制（Control，事後）→「A 在前、C 在後」。</li>
+        <li><b>看字首猜部門</b>：MKT ← <b>M</b>ar<b>K</b>e<b>T</b>ing、ACCT ← <b>Acc</b>oun<b>t</b>ing、PUR ← <b>Pur</b>chasing、LOG ← <b>Log</b>istics、WH ← <b>W</b>are<b>h</b>ouse。</li>
+        <li><b>「遇到問題找誰」口訣</b>：電腦壞了找 IT、客戶抱怨找 CS、合約審閱找 Legal、買東西找 PUR、上媒體找 PR、新產品找 R&amp;D。</li>
+      </ul>
+    </div>
+  </div>
+  <div id="bonus-quiz" class="bonus-part" hidden></div>
+</section>
+
 </main>
 <footer>資料來源：CCS_AI_題庫總整理 MEMO｜作答紀錄只存在本機瀏覽器</footer>
 
@@ -635,6 +673,61 @@ const NOTES_QUIZ = [
  {q:"Short supply 是什麼意思？",fix:true,o:["供應充足","供應不足","短暫休息"],a:[1],e:"short = 不足、短缺；supply = 供應。例句：We are short on supplies.",t:"short 除了「短」，也有「不夠」的意思。"}
 ];
 
+/* 部門縮寫：[縮寫, 英文全名, 中文, 主要職責] */
+const DEPTS = [
+ ["管理與行政支援", [
+  ["Admin","Administration Department","行政部","公司行政管理、文書、庶務協調"],
+  ["GA","General Affairs Department","總務部","辦公用品、設施維護、庶務採買"],
+  ["HR","Human Resources Department","人力資源部","招募、薪酬福利、教育訓練、勞資關係"],
+  ["FIN","Finance Department","財務部","資金調度、預算規劃、投資理財"],
+  ["ACCT","Accounting Department","會計部","帳務處理、財務報表、稅務申報"],
+  ["Legal","Legal Department","法務部","合約審閱、智慧財產權、法規遵循"],
+  ["IA","Internal Audit Office","稽核室","內部控制、流程稽核"]
+ ]],
+ ["技術與資訊", [
+  ["IT","Information Technology Department","資訊部","電腦設備、網路、技術支援"],
+  ["MIS","Management Information Systems Department","資訊管理部","企業資訊系統（如 ERP）開發與維護"],
+  ["R&D","Research and Development Department","研發部","新產品、新技術研究開發"],
+  ["ENG","Engineering Department","工程部","工程設計、製程技術"],
+  ["QA","Quality Assurance Department","品質保證部","制定品質流程，事前預防問題"],
+  ["QC","Quality Control Department","品質管制部","檢驗產品，事後找出不良品"]
+ ]],
+ ["營運與生產", [
+  ["OPS","Operations Department","營運部","日常營運流程管理"],
+  ["PROD","Production Department","生產部","產品製造、產線管理"],
+  ["PUR","Purchasing Department","採購部","採購原料、設備與用品，供應商管理"],
+  ["SCM","Supply Chain Management Department","供應鏈管理部","整合採購、生產、庫存到出貨"],
+  ["LOG","Logistics Department","物流部","運輸、配送、進出口"],
+  ["WH","Warehouse","倉儲部","庫存管理、收發貨"],
+  ["PMO","Project Management Office","專案管理辦公室","專案規劃、進度與資源控管"]
+ ]],
+ ["業務與行銷", [
+  ["Sales","Sales Department","業務部","銷售產品、開發與維繫客戶"],
+  ["BD","Business Development Department","業務開發部","開拓新市場、新合作夥伴"],
+  ["MKT","Marketing Department","行銷部","市場調查、廣告、品牌推廣"],
+  ["PR","Public Relations Department","公關部","媒體關係、企業形象、危機處理"],
+  ["CS","Customer Service Department","客服部","客戶諮詢、抱怨處理、售後服務"],
+  ["IR","Investor Relations Department","投資人關係部","股東溝通、法說會、財務資訊揭露"]
+ ]]
+];
+
+const BONUS_QUIZ = [
+ {q:"HR 的完整英文名稱是？",o:["Human Resources","Human Relations","Hiring Room","Help Request"],a:[0],e:"HR = Human Resources Department 人力資源部，負責招募、薪酬、訓練。",t:"H 人（Human）+ R 資源（Resources）。"},
+ {q:"R&D 指的是哪個部門？",o:["研發部","人資部","法務部","物流部"],a:[0],e:"R&D = Research and Development 研究與開發。",t:"Research 研究 & Development 開發。"},
+ {q:"新進員工要詢問薪資與勞健保，應該找哪個部門？",o:["IT","HR","PR","QC"],a:[1],e:"薪酬福利、勞健保屬於人力資源部 (HR) 的職責。",t:"跟「人」有關的事找 HR。"},
+ {q:"辦公室電腦無法連上網路，應該找哪個部門？",o:["IT","CS","MKT","ACCT"],a:[0],e:"電腦設備與網路問題由資訊部 (IT, Information Technology) 處理。",t:"電腦壞了找 IT。"},
+ {q:"客戶打電話來抱怨產品問題，通常由哪個部門處理？",o:["R&D","CS","FIN","WH"],a:[1],e:"CS = Customer Service 客服部，負責客訴與售後服務。",t:"Customer Service → 服務客戶。"},
+ {q:"負責「事後檢驗產品、找出不良品」的是哪個部門？",o:["QA","QC","PR","BD"],a:[1],e:"QC 品質管制管「產品」，事後檢驗；QA 品質保證管「流程」，事前預防。",t:"QA 在前（預防）、QC 在後（檢驗）。"},
+ {q:"公司接受媒體採訪、處理企業形象危機，由哪個部門負責？",o:["IR","PR","Legal","PUR"],a:[1],e:"PR = Public Relations 公關部；IR 是面對投資人。",t:"Public 大眾 → PR；Investor 投資人 → IR。"},
+ {q:"簽約前需要審閱合約條款，應交給哪個部門？",o:["Legal","Sales","LOG","MIS"],a:[0],e:"合約審閱、法規遵循屬於法務部 (Legal Department)。",t:"合約 = 法律文件 → Legal。"},
+ {q:"PUR 是哪個部門的縮寫？",o:["Production 生產部","Purchasing 採購部","Public Relations 公關部","Project 專案部"],a:[1],e:"PUR = Purchasing Department 採購部，負責購買原料、設備與用品。",t:"PUR ← PURchasing，買東西找 PUR。"},
+ {q:"MKT 的中文是？",o:["市場倉儲部","行銷部","管理部","維修部"],a:[1],e:"MKT = Marketing Department 行銷部，負責市場調查、廣告與品牌推廣。",t:"取 MarKeTing 中的 M-K-T。"},
+ {q:"負責「記錄帳務、編製財務報表、稅務申報」的是？",o:["FIN 財務部","ACCT 會計部","IA 稽核室","Admin 行政部"],a:[1],e:"會計 (Accounting) 記錄已發生的帳務；財務 (Finance) 規劃資金的未來。",t:"會計記「過去」，財務管「未來」。"},
+ {q:"名片上的「Dept.」是哪個英文字的縮寫？",o:["Deposit","Department","Development","Director"],a:[1],e:"Dept. = Department 部門，例如 Sales Dept. 業務部。",t:"Dept. 取 DEPartmenT 的頭尾字母。"},
+ {q:"下列縮寫與部門配對，何者正確？（複選）",o:["LOG — 物流部","WH — 倉儲部","BD — 業務開發部","IR — 資訊部"],a:[0,1,2],e:"IR = Investor Relations 投資人關係部；資訊部是 IT。",t:"IR 的 I 是 Investor，不是 Information。"},
+ {q:"負責整合採購、生產、庫存到出貨整條流程的部門縮寫是？",o:["SCM","PMO","OPS","ENG"],a:[0],e:"SCM = Supply Chain Management 供應鏈管理。",t:"Supply Chain = 供應「鏈」，管整條鏈。"}
+];
+
 /* ===== 狀態（存 localStorage，可失敗） ===== */
 const LS_KEY = "ccs_ai_quiz_v1";
 let store = {};
@@ -741,7 +834,7 @@ function refreshWrongCount(){
 }
 
 /* ===== 分頁 ===== */
-const TABS = [["summary","重點整理"],["c1",BANK.c1.short],["c2",BANK.c2.short],["c3",BANK.c3.short],["c4",BANK.c4.short],["wrong","錯題本"],["en","英文"],["notes","手寫筆記整理"]];
+const TABS = [["summary","重點整理"],["c1",BANK.c1.short],["c2",BANK.c2.short],["c3",BANK.c3.short],["c4",BANK.c4.short],["wrong","錯題本"],["en","英文"],["notes","手寫筆記整理"],["bonus","加分題"]];
 const tabsEl = document.getElementById("tabs");
 TABS.forEach(([id,label]) => { const b=document.createElement("button"); b.textContent=label; b.dataset.p=id; b.onclick=()=>show(id); tabsEl.appendChild(b); });
 function show(id, fromSearch){
@@ -763,7 +856,13 @@ function show(id, fromSearch){
 renderQuiz(document.getElementById("en-quiz"), "en", EN_QUIZ, {heading:`英文考題（${EN_QUIZ.length} 題）`, track:false});
 document.getElementById("sent-list").innerHTML = SENTENCES.map(([en,zh,note]) =>
   `<div class="card"><div class="en">${esc(en)}</div><div class="zh">${esc(zh)}</div><div style="margin-top:6px"><span class="key">${esc(note)}</span></div></div>`).join("");
-[["en-sub","en"],["notes-sub","notes"]].forEach(([subId, prefix]) => {
+document.getElementById("bonus-table").innerHTML = DEPTS.map(([group, rows]) => `
+  <div class="card"><h3>${esc(group)}</h3><div class="tablewrap"><table>
+    <tr><th>縮寫</th><th>英文全名</th><th>中文</th><th>主要職責</th></tr>
+    ${rows.map(r => `<tr><td><span class="key">${esc(r[0])}</span></td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td></tr>`).join("")}
+  </table></div></div>`).join("");
+renderQuiz(document.getElementById("bonus-quiz"), "bonus", BONUS_QUIZ, {heading:`加分考題（${BONUS_QUIZ.length} 題）`, track:false});
+[["en-sub","en"],["notes-sub","notes"],["bonus-sub","bonus"]].forEach(([subId, prefix]) => {
   document.querySelectorAll(`#${subId} button`).forEach(b => b.onclick = () => {
     document.querySelectorAll(`#${subId} button`).forEach(x => x.classList.toggle("active", x===b));
     document.querySelectorAll(`.${prefix}-part`).forEach(p => p.hidden = p.id !== `${prefix}-${b.dataset.s}`);
@@ -779,13 +878,13 @@ document.getElementById("copy-prompt").onclick = async (e) => {
 refreshWrongCount();
 
 /* ===== 關鍵字搜尋 ===== */
-const SUMMARY_SNIPPETS = [...document.querySelectorAll("#p-summary li, #p-summary tr, #p-summary .tip, #en-pron .tip, #en-verb tr, #en-verb .tip, #p-notes tr, #p-notes li, #p-notes .tip, #notes-prompt")]
+const SUMMARY_SNIPPETS = [...document.querySelectorAll("#p-summary li, #p-summary tr, #p-summary .tip, #en-pron .tip, #en-verb tr, #en-verb .tip, #p-notes tr, #p-notes li, #p-notes .tip, #notes-prompt, #p-bonus tr, #p-bonus li")]
   .filter(el => !el.querySelector("th"))
   .map(el => {
     const sec = el.closest("section");
     const card = el.closest(".card");
     const h = card && card.querySelector("h3");
-    const page = sec.id === "p-summary" ? "重點整理" : sec.id === "p-notes" ? "手寫筆記" : "英文";
+    const page = sec.id === "p-summary" ? "重點整理" : sec.id === "p-notes" ? "手寫筆記" : sec.id === "p-bonus" ? "加分題" : "英文";
     const text = el.tagName === "TR" ? [...el.cells].map(c => c.textContent.trim()).join(" ｜ ") : el.textContent;
     return {text: text.replace(/\s+/g, " ").trim(), src: page + (h ? "｜" + h.textContent : "")};
   });
@@ -793,6 +892,7 @@ const ALL_Q = [];
 Object.keys(BANK).forEach(k => BANK[k].items.forEach((it,i) => ALL_Q.push({...it, _k:k, _i:i, _src:BANK[k].short})));
 EN_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"en", _i:i, _src:"英文考題"}));
 NOTES_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"notes", _i:i, _src:"手寫筆記測驗"}));
+BONUS_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"bonus", _i:i, _src:"加分題"}));
 const searchEl = document.getElementById("search");
 const clearEl = document.getElementById("search-clear");
 let lastTab = "summary", searchTimer;
