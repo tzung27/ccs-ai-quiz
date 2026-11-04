@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCS AI 考古題</title>
+<style>
+:root{
+  --bg:#f6f7fb; --card:#ffffff; --ink:#1d2433; --muted:#5b6475; --line:#e3e6ee;
+  --brand:#3b5bdb; --brand-soft:#e8edff; --ok:#1f8f4e; --ok-soft:#e3f6ea;
+  --bad:#c92a2a; --bad-soft:#fdeaea; --tip:#9c6a00; --tip-soft:#fff6dc;
+  --shadow:0 1px 3px rgba(20,30,60,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#11141b; --card:#1a1f2a; --ink:#e7eaf1; --muted:#9aa3b5; --line:#2b3240;
+    --brand:#7c95ff; --brand-soft:#232c48; --ok:#4cc982; --ok-soft:#163223;
+    --bad:#ff7b7b; --bad-soft:#3a1c1f; --tip:#f2c14e; --tip-soft:#33290f;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#11141b; --card:#1a1f2a; --ink:#e7eaf1; --muted:#9aa3b5; --line:#2b3240;
+  --brand:#7c95ff; --brand-soft:#232c48; --ok:#4cc982; --ok-soft:#163223;
+  --bad:#ff7b7b; --bad-soft:#3a1c1f; --tip:#f2c14e; --tip-soft:#33290f;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 "Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif}
+header{padding:28px 16px 12px;max-width:980px;margin:0 auto}
+header h1{margin:0;font-size:1.6rem}
+header p{margin:4px 0 0;color:var(--muted)}
+nav{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs{max-width:980px;margin:0 auto;padding:8px 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+.tabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;font:inherit;font-size:.92rem}
+.tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+main{max-width:980px;margin:0 auto;padding:16px 16px 60px}
+section.page{display:none}
+section.page.active{display:block}
+h2{font-size:1.3rem;margin:8px 0 12px}
+h3{font-size:1.08rem;margin:20px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0;box-shadow:var(--shadow)}
+.card ul{margin:6px 0;padding-left:1.3em}
+.tip{background:var(--tip-soft);border-left:4px solid var(--tip);border-radius:8px;padding:10px 14px;margin:10px 0}
+.tip b{color:var(--tip)}
+.key{background:var(--brand-soft);color:var(--brand);padding:0 6px;border-radius:5px;font-weight:600}
+.no{color:var(--bad);font-weight:600}.yes{color:var(--ok);font-weight:600}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:8px 0;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+ol.steps li{background:var(--brand-soft);color:var(--brand);border-radius:8px;padding:4px 10px;font-weight:600}
+ol.steps li:not(:last-child)::after{content:" →";color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--brand-soft);color:var(--brand)}
+.tablewrap{overflow-x:auto}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 8px}
+.toolbar .score{margin-left:auto;font-weight:600;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 12px;border-radius:8px;cursor:pointer;font:inherit;font-size:.9rem}
+.btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn:disabled{opacity:.45;cursor:default}
+.q .qhead{display:flex;gap:8px;align-items:baseline}
+.q .num{flex:0 0 auto;font-weight:700;color:var(--brand)}
+.q .tag{font-size:.75rem;background:var(--tip-soft);color:var(--tip);border-radius:5px;padding:0 6px;margin-left:6px;white-space:nowrap}
+.opts{display:grid;gap:7px;margin:10px 0}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font:inherit}
+.opt .letter{font-weight:700;color:var(--muted);flex:0 0 1.2em}
+.opt.sel{border-color:var(--brand);background:var(--brand-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default}
+.explain{display:none;border-top:1px dashed var(--line);margin-top:10px;padding-top:10px}
+.q.done .explain{display:block}
+.verdict{font-weight:700}
+.sub{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+.sub button{border:1px solid var(--line);background:var(--card);color:var(--muted);padding:4px 12px;border-radius:7px;cursor:pointer;font:inherit;font-size:.9rem}
+.sub button.active{color:var(--brand);border-color:var(--brand);background:var(--brand-soft)}
+.en{font-weight:600}
+.zh{color:var(--muted);font-size:.93rem}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.hl{color:var(--brand);font-weight:700}
+.searchbar{max-width:980px;margin:0 auto;padding:8px 16px 0;display:flex;gap:8px}
+.searchbar input{flex:1;min-width:0;font:inherit;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.searchbar input:focus{outline:2px solid var(--brand);outline-offset:-1px}
+mark{background:#ffe066;color:#1d2433;border-radius:3px;padding:0 1px}
+.hitsrc{font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.hitgroup{margin:18px 0 6px;font-weight:700;color:var(--brand)}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <h1>CCS Generative AI Foundations 考古題</h1>
+  <p>生成式 AI 核心能力｜重點整理 · 分類題庫（含解析與記憶技巧）· 英文文法練習</p>
+</header>
+<nav>
+  <div class="searchbar">
+    <input id="search" type="search" placeholder="🔍 關鍵字搜尋（例：LangChain、偏見、思維鏈、taught）" autocomplete="off">
+    <button class="btn" id="search-clear" hidden>清除</button>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</nav>
+<main id="main">
+
+<!-- ========== 重點整理 ========== -->
+<section class="page" id="p-summary">
+  <h2>重點整理</h2>
+  <div class="tip"><b>總口訣：</b>「<span class="key">概念</span>、<span class="key">提示</span>、<span class="key">優化</span>、<span class="key">倫理</span>」四大考綱 —— 先懂 AI 是什麼，再學怎麼問，接著學怎麼問得更好，最後學怎麼安全負責地用。</div>
+
+  <div class="card">
+    <h3>考綱一：生成式 AI 方法與方法論</h3>
+    <ul>
+      <li>生成式 AI <span class="yes">會</span>使用神經網路，<span class="yes">能</span>建立文字、圖像、語音等新內容；「只提供搜尋結果清單」是<span class="no">搜尋引擎</span>的特性。</li>
+      <li>生成回覆時，利用<span class="key">預測</span>對每個詞做<span class="key">概率性選擇</span>；模型可以<span class="key">重新訓練</span>以更符合目的。</li>
+      <li>搜尋引擎能說明<b>資訊來源</b>；生成式 AI 能產生<b>網路上找不到的新材料</b>。</li>
+      <li>估算未來數值（如 2200 年地球均溫）→ <span class="key">預測性 AI</span>。</li>
+    </ul>
+    <p><b>LLM 訓練流程：</b></p>
+    <ol class="steps"><li>收集資料集</li><li>預處理與清理</li><li>準備輸入資料</li><li>微調超參數</li></ol>
+    <ul>
+      <li>不同口音演繹電影對話 → <span class="key">文字生成語音</span>；動物尋家海報 → 輸出<span class="key">圖像 + 文字</span>。</li>
+      <li>客製化 Copilot / GPT：輸入<b>一組指令和資訊</b>，讓它準備好執行特定任務。</li>
+      <li>結合兩位作家風格：用包含兩者作品的 <b>Transformer 模型</b>建立輕量 GPT。</li>
+      <li>多科目輔導：<b>客製 Transformer 模型 + 每科具體指令</b>。</li>
+      <li>多代理人分工（貸款流程）→ <span class="key">LangChain</span>；商標、計畫書等現成商業方案 → <span class="key">ChatGPT</span>。</li>
+    </ul>
+    <div class="tablewrap"><table>
+      <tr><th>工具</th><th>功能</th></tr>
+      <tr><td>Adobe Express</td><td>生成圖像與風格字體，並<b>排程發佈</b>到社群媒體</td></tr>
+      <tr><td>Azure AI Studio</td><td><b>串連一系列 AI</b> 執行業務任務</td></tr>
+      <tr><td>Canva</td><td>建立設計、簡報與行銷素材</td></tr>
+      <tr><td>ChatGPT</td><td>對話、回答問題、提供資訊</td></tr>
+    </table></div>
+    <div class="tip"><b>記憶技巧：</b>LLM 訓練像煮菜「<b>買、洗、備、調</b>」——買菜(收集)、洗菜(清理)、備料(準備輸入)、調味(微調超參數)。工具配對：「Adobe 排<b>程</b>發、Azure 串<b>連</b>用、Canva 做<b>設</b>計、ChatGPT 會<b>聊</b>天」。</div>
+  </div>
+
+  <div class="card">
+    <h3>考綱二：基礎提示工程</h3>
+    <div class="tablewrap"><table>
+      <tr><th>提示詞四大結構</th><th>範例句型</th></tr>
+      <tr><td>角色 Role</td><td>「你是一位在[目標受眾領域]有豐富經驗的高級行銷經理」</td></tr>
+      <tr><td>特定指令 Instruction</td><td>「根據客戶對新產品的喜好程度，為他們生成郵件。請使用這些詳細資訊…」</td></tr>
+      <tr><td>上下文 Context</td><td>「我們需要為清單[試算表連結]中的每個人生成電子郵件…」</td></tr>
+      <tr><td>約束與舉例 Constraints</td><td>「郵件需個性化，語氣模仿一個有好消息要告訴你的摯友」</td></tr>
+    </table></div>
+    <ul>
+      <li><span class="key">提示詞鏈接</span>：拆成子任務，<b>上一個輸出 = 下一個輸入</b>。</li>
+      <li><span class="key">思維鏈 CoT</span>：給出<b>推導步驟 + 解答範例</b>（紅 + 藍 → 紫），引導逐步推理。</li>
+      <li><span class="key">反向提示詞</span>：先讓 AI <b>問你需要的資訊</b>，再生成內容（「讓我提供簡歷所需的每個關鍵細節，然後生成簡歷」）。</li>
+    </ul>
+    <p><b>擴散模型生成圖像順序：</b></p>
+    <ol class="steps"><li>分詞 Tokenization</li><li>雜訊生成</li><li>擴散 Diffusion</li><li>優化演算法</li></ol>
+    <ul>
+      <li>好的行程提示詞：具體天數、交通方式（飛到鄰近機場 + 租車）、地區景點。</li>
+      <li>「總結」類提示詞：《魔戒》情節 500 字概括、今天會議主要議題（附會議記錄）。</li>
+      <li>轉換簡報促進學習：「將內容轉換為吸引人且易於理解的格式」。</li>
+    </ul>
+    <div class="tip"><b>記憶技巧：</b>四大結構「<b>角指上約</b>」→ 諧音「<b>腳趾上藥</b>」。擴散順序「<b>分、噪、擴、優</b>」→ 洗照片：先看懂要拍什麼(分詞)→ 撒滿雜點(雜訊)→ 慢慢顯影(擴散)→ 最後修圖(優化)。</div>
+  </div>
+
+  <div class="card">
+    <h3>考綱三：提示優化與資料驗證</h3>
+    <ul>
+      <li><b>有偏見</b>的提示詞會預設立場，例如「重點關注<b>最重大影響</b>」「<b>強調</b>可再生能源比化石燃料更好」。</li>
+      <li><b>無偏見</b>：引用<b>獨立第三方研究</b>，關注<b>可行性見解與潛在策略</b>。</li>
+      <li>內容不符合個人狀況（健身計畫）→ 提供<b>自己的時間表</b>並說明<b>身體限制</b>。</li>
+      <li>想要更詳細、更有針對性 → 要求<b>詳細範例</b> + 指定<b>領域</b>（汽車與金融）。</li>
+      <li>故事中保留圖表原意：「麵包師發現規律」故事中<b>包含圖表資料</b>，暗示高脂肪食物與藥物用量的關係。</li>
+      <li>轉為正規報告：週淨利 → <span class="yes">季度報告（總淨利 + 平均淨利）</span>；轉成宣傳單 / 語音 <span class="no">不適合</span>。</li>
+    </ul>
+    <div class="tip"><b>記憶技巧：</b>看到「<b>強調、最重大、更好</b>」等帶立場字眼 = 有偏見；看到「<b>獨立、可行性、潛在</b>」= 中立。優化提示詞三寶：「<b>給背景、給限制、給範例</b>」。</div>
+  </div>
+
+  <div class="card">
+    <h3>考綱四：倫理、法律、社會影響與安全</h3>
+    <ul>
+      <li>正面影響：海量資料<b>醫學研究</b>、<b>高效耕作</b>、瞭解<b>世界文化</b>。</li>
+      <li>未保護個資的後果：<b>身分盜用</b>、<b>隱私訴訟</b>、<b>客戶失去信任</b>。</li>
+      <li>客服機器人風險：敏感資料處理不當、缺乏人為監督而不準確、歧視性輸入導致偏見（三者<span class="yes">皆正確</span>）。</li>
+      <li>偏見資料訓練出偏見圖像 <span class="yes">正確</span>；ChatGPT 能可靠消除偏見 <span class="no">錯誤</span>；應人工審查 <span class="yes">正確</span>。</li>
+    </ul>
+    <div class="tablewrap"><table>
+      <tr><th>偏見階段</th><th>自駕車案例</th></tr>
+      <tr><td>資料收集</td><td>攝像頭只在<b>白天</b>錄影</td></tr>
+      <tr><td>數據標注</td><td>只標註<b>停車標誌與紅綠燈</b></td></tr>
+      <tr><td>模型訓練</td><td>行人依<b>身高</b>給不同加權值</td></tr>
+      <tr><td>部署</td><td>銷往各處但只在<b>單一城市</b>測試</td></tr>
+    </table></div>
+    <ul>
+      <li>查證：搜尋學術資源 <span class="yes">是</span>、權威資料庫 / 機構報告 <span class="yes">是</span>、用<b>另一個 AI</b> 查證 <span class="no">否</span>（可能有同樣幻覺）。</li>
+      <li>AI 招募須考慮：<b>個資法、勞動法、智慧財產權法</b>。</li>
+      <li>專利：AI <span class="no">不能是唯一發明者</span>，需<b>實質人類貢獻</b>（使用 AI 更正現有設計中不準確處）。</li>
+      <li>提示詞避免 PII：<b>姓名、年齡、位置、社群帳號</b>。</li>
+      <li>使用者須對生成內容<b>負法律責任</b>，有害或侵權內容可能引發民事或刑事訴訟。</li>
+    </ul>
+    <div class="tip"><b>記憶技巧：</b>偏見四階段「<b>收、標、訓、部</b>」= 自駕車人生：先拍照(收)、貼標籤(標)、去上課(訓)、出門上路(部)。查證口訣：「<b>AI 不能幫 AI 作證</b>」。專利口訣：「<b>AI 是工具，人才是發明人</b>」。</div>
+  </div>
+</section>
+
+<!-- 題庫分頁（由 JS 產生） -->
+<section class="page" id="p-c1"></section>
+<section class="page" id="p-c2"></section>
+<section class="page" id="p-c3"></section>
+<section class="page" id="p-c4"></section>
+<section class="page" id="p-wrong"></section>
+<section class="page" id="p-search"><h2 id="search-title">搜尋結果</h2><div id="search-summary"></div><div id="search-quiz"></div></section>
+
+<!-- ========== 英文 ========== -->
+<section class="page" id="p-en">
+  <h2>英文文法練習（AI 主題）</h2>
+  <div class="sub" id="en-sub">
+    <button data-s="pron" class="active">人稱代名詞</button>
+    <button data-s="verb">動詞</button>
+    <button data-s="sent">例句</button>
+    <button data-s="quiz">考題</button>
+  </div>
+
+  <div id="en-pron" class="en-part">
+    <div class="card">
+      <h3>人稱代名詞總表</h3>
+      <div class="tablewrap"><table>
+        <tr><th>人稱</th><th>主格</th><th>受格</th><th>所有格形容詞</th><th>所有格代名詞</th><th>反身代名詞</th><th>be 動詞（現在）</th></tr>
+        <tr><td>第一人稱單數 我</td><td>I</td><td>me</td><td>my</td><td>mine</td><td>myself</td><td>am</td></tr>
+        <tr><td>第二人稱單數 你</td><td>you</td><td>you</td><td>your</td><td>yours</td><td>yourself</td><td>are</td></tr>
+        <tr><td>第三人稱單數 他</td><td>he</td><td>him</td><td>his</td><td>his</td><td>himself</td><td>is</td></tr>
+        <tr><td>第三人稱單數 她</td><td>she</td><td>her</td><td>her</td><td>hers</td><td>herself</td><td>is</td></tr>
+        <tr><td>第三人稱單數 它</td><td>it</td><td>it</td><td>its</td><td>—</td><td>itself</td><td>is</td></tr>
+        <tr><td>第一人稱複數 我們</td><td>we</td><td>us</td><td>our</td><td>ours</td><td>ourselves</td><td>are</td></tr>
+        <tr><td>第二人稱複數 你們</td><td>you</td><td>you</td><td>your</td><td>yours</td><td>yourselves</td><td>are</td></tr>
+        <tr><td>第三人稱複數 他們</td><td>they</td><td>them</td><td>their</td><td>theirs</td><td>themselves</td><td>are</td></tr>
+      </table></div>
+      <div class="tip"><b>記憶技巧：</b>主格放<b>動詞前</b>（誰做），受格放<b>動詞或介系詞後</b>（做給誰）。所有格形容詞後面<b>一定接名詞</b>（my model），所有格代名詞<b>單獨使用</b>（The model is mine）。<br>be 動詞口訣：「<b>I 用 am，you 用 are，is 跟著他她它，複數通通都用 are</b>」。</div>
+    </div>
+    <div class="card">
+      <h3>用法對照</h3>
+      <ul>
+        <li><span class="en">She</span> trains the model. — 主格（她訓練模型）</li>
+        <li>The teacher helps <span class="en">her</span>. — 受格（老師幫助她）</li>
+        <li>This is <span class="en">her</span> prompt. — 所有格形容詞 + 名詞</li>
+        <li>The best prompt is <span class="en">hers</span>. — 所有格代名詞（＝ her prompt）</li>
+        <li>She checked the answer <span class="en">herself</span>. — 反身代名詞（她自己檢查）</li>
+        <li>The AI tool updates <span class="en">its</span> data. — <b>its</b>（它的）≠ <b>it's</b>（it is）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="en-verb" class="en-part" hidden>
+    <div class="card">
+      <h3>第三人稱單數現在式：動詞加 -s / -es</h3>
+      <div class="tablewrap"><table>
+        <tr><th>規則</th><th>原形 → 第三人稱單數</th></tr>
+        <tr><td>一般動詞 + s</td><td>generate → generates、predict → predicts、train → trains</td></tr>
+        <tr><td>字尾 s, x, ch, sh, o + es</td><td>fix → fixes、watch → watches、finish → finishes、go → goes</td></tr>
+        <tr><td>子音 + y → 去 y 加 ies</td><td>study → studies、verify → verifies、apply → applies</td></tr>
+        <tr><td>母音 + y → 直接 + s</td><td>play → plays、deploy → deploys</td></tr>
+        <tr><td>特殊</td><td>have → <b>has</b>、be → <b>is</b></td></tr>
+      </table></div>
+      <div class="tip"><b>記憶技巧：</b>「<b>他她它，動詞要加 s</b>」。主詞是 he / she / it / 單數名詞（The model、ChatGPT）且是現在式，動詞就要變。否定與疑問改由 <b>does</b> 扛 s，動詞回原形：She <b>doesn't</b> use… / <b>Does</b> it work?</div>
+    </div>
+    <div class="card">
+      <h3>五大常用時態</h3>
+      <div class="tablewrap"><table>
+        <tr><th>時態</th><th>公式</th><th>例句</th><th>關鍵字</th></tr>
+        <tr><td>現在簡單式</td><td>V / V-s</td><td>AI <b>generates</b> text.</td><td>always, usually, every day</td></tr>
+        <tr><td>現在進行式</td><td>am / is / are + V-ing</td><td>We <b>are training</b> a model.</td><td>now, at the moment</td></tr>
+        <tr><td>過去簡單式</td><td>V-ed / 不規則過去式</td><td>They <b>tested</b> the chatbot yesterday.</td><td>yesterday, last week, ago</td></tr>
+        <tr><td>未來式</td><td>will + V / be going to + V</td><td>I <b>will check</b> the facts.</td><td>tomorrow, next year</td></tr>
+        <tr><td>現在完成式</td><td>have / has + p.p.</td><td>She <b>has written</b> three prompts.</td><td>already, yet, since, for</td></tr>
+      </table></div>
+      <div class="tip"><b>記憶技巧：</b>看到時間關鍵字就鎖定時態：「<b>yesterday 用過去、now 用進行、tomorrow 用 will、already 用完成</b>」。</div>
+    </div>
+    <div class="card">
+      <h3>常見不規則動詞</h3>
+      <div class="tablewrap"><table>
+        <tr><th>原形</th><th>過去式</th><th>過去分詞</th><th>中文</th></tr>
+        <tr><td>write</td><td>wrote</td><td>written</td><td>寫</td></tr>
+        <tr><td>make</td><td>made</td><td>made</td><td>製作</td></tr>
+        <tr><td>build</td><td>built</td><td>built</td><td>建立</td></tr>
+        <tr><td>teach</td><td>taught</td><td>taught</td><td>教</td></tr>
+        <tr><td>think</td><td>thought</td><td>thought</td><td>思考</td></tr>
+        <tr><td>find</td><td>found</td><td>found</td><td>找到</td></tr>
+        <tr><td>give</td><td>gave</td><td>given</td><td>給</td></tr>
+        <tr><td>take</td><td>took</td><td>taken</td><td>拿、花費</td></tr>
+        <tr><td>choose</td><td>chose</td><td>chosen</td><td>選擇</td></tr>
+        <tr><td>know</td><td>knew</td><td>known</td><td>知道</td></tr>
+        <tr><td>begin</td><td>began</td><td>begun</td><td>開始</td></tr>
+        <tr><td>understand</td><td>understood</td><td>understood</td><td>理解</td></tr>
+      </table></div>
+      <div class="tip"><b>記憶技巧：</b>依變化分組背：<b>AAA</b>（put-put-put）、<b>ABB</b>（make-made-made、build-built-built、teach-taught-taught）、<b>ABC</b>（write-wrote-written、give-gave-given）。-ought / -aught 一族：think → thought、teach → taught、buy → bought。</div>
+    </div>
+    <div class="card">
+      <h3>AI 考試常用動詞</h3>
+      <div class="tablewrap"><table>
+        <tr><th>動詞</th><th>中文</th><th>搭配</th></tr>
+        <tr><td>generate</td><td>生成</td><td>generate images / text</td></tr>
+        <tr><td>predict</td><td>預測</td><td>predict the temperature</td></tr>
+        <tr><td>train</td><td>訓練</td><td>train a model on data</td></tr>
+        <tr><td>collect</td><td>收集</td><td>collect a dataset</td></tr>
+        <tr><td>label</td><td>標注</td><td>label the images</td></tr>
+        <tr><td>deploy</td><td>部署</td><td>deploy the system</td></tr>
+        <tr><td>summarize</td><td>總結</td><td>summarize the meeting</td></tr>
+        <tr><td>verify</td><td>查證</td><td>verify the facts</td></tr>
+        <tr><td>refine</td><td>優化、修訂</td><td>refine the prompt</td></tr>
+        <tr><td>protect</td><td>保護</td><td>protect personal data</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div id="en-sent" class="en-part" hidden>
+    <div class="grid2" id="sent-list"></div>
+  </div>
+
+  <div id="en-quiz" class="en-part" hidden></div>
+</section>
+
+</main>
+<footer>資料來源：CCS_AI_題庫總整理 MEMO｜作答紀錄只存在本機瀏覽器</footer>
+
+<script>
+/* ===== 題庫資料 =====
+   q: 題目, o: 選項, a: 正確選項索引陣列（多個即複選）, e: 解析, t: 記憶技巧, fix: 選項不打亂（排序題） */
+const BANK = {
+c1: {title:"考綱一：生成式 AI 方法與方法論", short:"考綱一 概念", items:[
+ {q:"下列何者「不是」生成式 AI 的特性？",o:["使用神經網路來建立輸出","可以建立文字、圖像和語音等新內容","僅根據搜尋條件提供結果清單","可重新訓練，以生成更符合預期目的的回覆"],a:[2],e:"「僅根據搜尋條件提供結果清單」是搜尋引擎的特性。生成式 AI 會用神經網路產生新內容，也能重新訓練。",t:"搜尋給「清單」，生成造「新品」。"},
+ {q:"生成式 AI 在生成回覆時，如何決定回覆中的每個詞？",o:["從資料庫中複製完整的句子","利用預測，對每個詞進行概率性的選擇","由工程師逐字人工審核","完全隨機挑選，沒有規則"],a:[1],e:"LLM 的本質是根據上下文預測下一個詞的機率分布，再依機率選詞，所以每次回答可能略有不同。",t:"LLM 就是超強「文字接龍」：猜下一個字的機率。"},
+ {q:"關於搜尋引擎與生成式 AI 的比較，下列何者正確？（複選）",o:["搜尋引擎能明確說明資訊在網路上的來源","生成式 AI 能根據提示詞生成在任何網站上都找不到的新材料","生成式 AI 一定會附上可靠的資料來源","搜尋引擎能創作全新的文章"],a:[0,1],e:"搜尋引擎強在「找來源」；生成式 AI 強在「創造新內容」，但不保證附上可靠來源，因此需要查證。",t:"搜尋 = 圖書館員（告訴你書在哪）；生成 = 作家（幫你寫新的）。"},
+ {q:"研究資料並估算出 2200 年地球上的平均溫度，最適合的 AI 類型為何？",o:["生成式 AI","預測性 AI (Predictive AI)","電腦視覺 AI","規則式專家系統"],a:[1],e:"根據歷史資料推估未來數值，屬於預測性 AI 的典型應用。",t:"「估算未來的數字」→ 預測性 AI。"},
+ {q:"大型語言模型 (LLM) 訓練基本流程的正確順序為何？",fix:true,o:["收集資料集 → 預處理和清理資料集 → 準備要輸入的資料 → 微調超參數","預處理和清理資料集 → 收集資料集 → 微調超參數 → 準備要輸入的資料","收集資料集 → 微調超參數 → 準備要輸入的資料 → 預處理和清理資料集","準備要輸入的資料 → 收集資料集 → 預處理和清理資料集 → 微調超參數"],a:[0],e:"先要有資料（收集），才能清理（預處理），清理後整理成模型可讀的格式（準備輸入），最後才調整訓練參數（微調超參數）。",t:"煮菜四步「買、洗、備、調」：買菜→洗菜→備料→調味。"},
+ {q:"想聽取不同口音演繹的電影場景對話，應使用哪種輸入/輸出類型？",o:["文字生成圖像","語音轉文字","文字生成語音","圖像生成文字"],a:[2],e:"把劇本文字轉成不同口音的語音，是「文字生成語音 (Text-to-Speech)」。",t:"想「聽」→ 輸出一定是語音。"},
+ {q:"製作「動物尋家」海報時，最主要的兩種輸出類型為何？（複選）",o:["圖像","文字","影片","程式碼"],a:[0,1],e:"海報由圖片與文字組成，因此主要輸出是圖像與文字。",t:"海報 = 圖 + 字。"},
+ {q:"如何客製化 Microsoft Copilot / GPT？",o:["從零開始重新訓練一個大型模型","向聊天機器人輸入一組指令和資訊，讓它準備好執行特定任務","購買更多 GPU 提升速度","只能等待官方推出新功能"],a:[1],e:"客製化 GPT / Copilot 的做法是給予預設指令與參考資訊，使其專注於特定任務，不需重新訓練模型。",t:"客製化 = 給它「說明書 + 資料」。"},
+ {q:"若要結合莎士比亞與 J.K. 羅琳的寫作風格，最佳做法為何？",o:["使用擴散模型生成兩位作家的畫像","分別搜尋兩位作家的作品清單","使用包含兩者作品的 Transformer 模型，建立輕量 GPT","使用預測性 AI 預測作品銷量"],a:[2],e:"文字風格學習屬於 Transformer（LLM）的強項，以兩者作品為基礎建立輕量 GPT 即可融合風格。",t:"寫「文字風格」→ Transformer / GPT。"},
+ {q:"使用 ChatGPT 建立多科目輔導工具，最有效且準確的方法為何？",o:["只用一個通用提示詞處理所有科目","使用客製的基於變換器 (Transformer) 的模型，針對每個科目提供具體指令","讓學生自行上網搜尋答案","只使用圖像生成模型"],a:[1],e:"每個科目需求不同，客製 Transformer 模型並為每科提供具體指令，可提高準確度。",t:"多科目 = 一科一份說明書。"},
+ {q:"自動化貸款申請流程包含獲取信用記錄、評分、發送簡訊等獨立任務，最適合透過多代理人分工合作開發的工具為何？",o:["Canva","Adobe Express","LangChain","DALL·E"],a:[2],e:"LangChain 擅長把多個 AI 代理 (Agent) 與工具串接，分工完成多步驟流程。",t:"Lang「Chain」= 把代理人「串成鏈」。"},
+ {q:"想快速取得現成的商業解決方案（如建立商標、撰寫計畫書），最適合使用哪個工具？",o:["ChatGPT","LangChain","Azure AI Studio","Excel"],a:[0],e:"ChatGPT 是現成可直接使用的對話式工具，適合快速產出商業文件與點子。",t:"「現成、立刻用」→ ChatGPT。"},
+ {q:"哪一個工具可以「生成圖像和風格字體，並按預定時間發佈至社群媒體」？",o:["Azure AI Studio","Adobe Express","ChatGPT","LangChain"],a:[1],e:"Adobe Express 具備生成圖像、風格文字與社群排程發佈功能。",t:"Adobe「Express」= 快遞，準時送到社群。"},
+ {q:"哪一個平台允許關聯一系列 AI 來執行業務任務？",o:["Canva","Adobe Express","Azure AI Studio","ChatGPT"],a:[2],e:"Azure AI Studio 是微軟的企業級 AI 開發平台，可串連多個 AI 模型與服務執行業務流程。",t:"Azure = 企業「工作室」，把 AI 串起來。"},
+ {q:"Canva 主要的功能為何？",o:["建立設計、簡報與行銷素材","訓練大型語言模型","多代理人分工","預測股價"],a:[0],e:"Canva 是設計平台，用於製作設計稿、簡報與行銷素材。",t:"Canva ≈ Canvas（畫布）→ 做設計。"}
+]},
+c2: {title:"考綱二：基礎提示工程", short:"考綱二 提示", items:[
+ {q:"「你是一位在[目標受眾領域]有著豐富經驗的高級行銷經理」屬於提示詞的哪個組成？",o:["生成式 AI 假定角色 (Role)","特定指令 (Specific Instruction)","完整的提示詞上下文 (Context)","約束條件及舉例 (Constraints & Examples)"],a:[0],e:"「你是一位…」就是在指定 AI 扮演的角色。",t:"四大結構「角指上約」→ 腳趾上藥；「你是…」= 角色。"},
+ {q:"「根據客戶對新產品的喜好程度，為他們生成郵件。請使用這些詳細資訊…」屬於哪個組成？",o:["角色","特定指令","上下文","約束條件及舉例"],a:[1],e:"明確告訴 AI 要「做什麼」（生成郵件），屬於特定指令。",t:"有動詞「生成、撰寫、整理」→ 指令。"},
+ {q:"「我們需要為清單[指向試算表的連結]中的每個人生成電子郵件…」屬於哪個組成？",o:["角色","特定指令","完整的提示詞上下文","約束條件及舉例"],a:[2],e:"說明背景、提供資料來源（清單、試算表），讓 AI 了解情境，屬於上下文。",t:"給「背景 + 資料」→ 上下文。"},
+ {q:"「郵件內容需要個性化，而且在語氣上應模仿一個有好消息要告訴你的摯友」屬於哪個組成？",o:["角色","特定指令","上下文","約束條件及舉例"],a:[3],e:"規定內容需個性化、指定語氣風格，屬於約束條件及舉例。",t:"「需要、應該、語氣、字數」→ 約束。"},
+ {q:"將任務分解為更小的子任務，並使用一個提示詞的輸出作為下一個提示詞的輸入，稱為？",o:["思維鏈 (Chain of Thought)","提示詞鏈接 (Prompt Chaining)","反向提示詞 (Reverse Prompting)","零樣本提示 (Zero-shot)"],a:[1],e:"Prompt Chaining 是把多個提示詞串接，前一步結果餵給下一步。",t:"提示詞鏈接 = 接力賽：棒子（輸出）交給下一棒。"},
+ {q:"提供包含邏輯推導步驟與解答範例（如混合紅、藍色得出紫色的推導），引導模型逐步推理的技術是？",o:["提示詞鏈接","反向提示詞","思維鏈 (Chain of Thought, CoT)","擴散模型"],a:[2],e:"CoT 透過示範「一步一步想」的推理過程，讓模型也逐步推理。",t:"Chain of 「Thought」= 把「思考過程」寫出來。"},
+ {q:"先引導 AI 詢問必要資訊，再生成最終內容的技術稱為？",o:["反向提示詞 (Reverse Prompting)","思維鏈","提示詞鏈接","微調超參數"],a:[0],e:"反向提示詞讓 AI 反過來問使用者問題，蒐集足夠資訊後再產出。",t:"反向 = 角色對調，換 AI 來發問。"},
+ {q:"下列哪個是使用「反向提示詞」撰寫簡歷的最佳範例？",o:["「幫我寫一份簡歷」","「寫一份全世界最厲害的簡歷」","「讓我提供簡歷所需的每個關鍵細節，然後使用這些資訊生成簡歷」","「列出十個簡歷範本網站」"],a:[2],e:"此提示詞讓 AI 先確認需要哪些細節，再據以生成簡歷，符合反向提示的精神。",t:"關鍵字「先提供／先詢問細節，然後生成」。"},
+ {q:"擴散模型 (Diffusion Model) 生成圖像的正確順序為何？",fix:true,o:["分詞解析詞彙 → 雜訊生成隨機像素值 → 擴散更改數值建立圖像 → 優化演算法使圖像符合提示詞","雜訊生成 → 分詞 → 優化演算法 → 擴散","擴散 → 分詞 → 雜訊生成 → 優化演算法","分詞 → 擴散 → 優化演算法 → 雜訊生成"],a:[0],e:"先理解提示詞（分詞），再產生隨機雜訊，經擴散逐步去噪成圖，最後用優化演算法讓圖更貼近提示詞。",t:"「分、噪、擴、優」= 洗照片：看懂→撒雜點→顯影→修圖。"},
+ {q:"規劃度假行程時，下列哪個提示詞最佳？",o:["「推薦一些好玩的地方」","「美國好玩嗎？」","「制定一個為期十天的旅行行程，包括飛往距離其中一個景點相對較近的機場，並租車遊覽美國西部的多個著名景點」","「給我機票價格」"],a:[2],e:"好提示詞包含明確天數、交通方式、地區與目標，AI 才能產出具體可用的行程。",t:"好提示詞要有「時間、地點、方式、目標」。"},
+ {q:"下列哪些屬於「總結現有內容」的提示詞？（複選）",o:["「托爾金的《魔戒》的情節是什麼？請用 500 字概括」","「今天會議的主要議題是什麼？（同時提供會議記錄）」","「寫一個全新的奇幻故事」","「預測明天的股市走勢」"],a:[0,1],e:"總結是針對「已存在的內容」濃縮重點；寫新故事是創作，預測股市是預測。",t:"總結 = 已經有內容 + 要變短。"},
+ {q:"想把內容轉換成簡報以促進學習，最佳提示詞為何？",o:["「製作一個簡報，將內容轉換為吸引人且易於理解的格式」","「把內容全部複製到投影片」","「做一份很多字的簡報」","「幫我找簡報範本」"],a:[0],e:"強調「吸引人」且「易於理解」，才符合促進學習的目的。",t:"學習用簡報 = 好看 + 好懂。"}
+]},
+c3: {title:"考綱三：提示優化與資料驗證", short:"考綱三 優化", items:[
+ {q:"下列關於拆除大壩的提示詞，何者「無偏見」？",o:["「生成一個 150 字的摘要，內容關於大壩拆除的主要成就，重點關注對生態系統產生的最重大影響」","「生成一份摘要，內容關於獨立協力廠商研究中針對拆除大壩提供的建議，重點關注在史密斯河上實施該專案的可行性見解和潛在策略」","「說明拆除大壩有多麼成功」","「列出拆除大壩的所有好處」"],a:[1],e:"引用獨立第三方研究、關注可行性與潛在策略，沒有預設結論；其他選項都預設「成功、好處、成就」。",t:"中立關鍵字：「獨立、可行性、潛在」。"},
+ {q:"「強調可再生能源比化石燃料能耗更低、更可靠」這段提示詞屬於？",o:["中立請求","有偏見的請求（預設傾斜立場）","反向提示詞","思維鏈"],a:[1],e:"「強調…更低、更可靠」已預設結論，AI 會只產出支持該立場的內容。",t:"看到「強調、更好、最重大」→ 有偏見。"},
+ {q:"AI 生成的健身計畫不符合你的個人狀況時，應如何改進提示詞？",o:["重新問同一個問題","換一個 AI 工具","提供自己的時間表，並說明個人身體狀況面臨的限制","要求計畫越難越好"],a:[2],e:"補充個人化資訊（時間、身體限制）才能讓 AI 產出合適的計畫。",t:"個人化 = 給「我的」條件。"},
+ {q:"若要獲得更詳細、最有針對性的回覆，應選擇哪個後續提示詞？",o:["「告訴我機器學習」","「機器學習好不好？」","「提供詳細的範例，說明最近在機器學習演算法方面取得的突破及其對汽車和金融行業的影響」","「列出幾家 AI 公司」"],a:[2],e:"要求「詳細範例」並指定「領域（汽車、金融）」，回覆才會具體且有針對性。",t:"要詳細：給範例 + 給範圍。"},
+ {q:"根據圖表資料寫故事，且需保留原始資料含義，應選擇哪個提示詞？",o:["「寫一個與圖表無關的童話故事」","「編寫一個麵包師發現規律的故事，在故事中包括圖表中的資料，暗示高脂肪食物與藥物用量之間的關係」","「寫一個故事，說高脂肪食物一定會致命」","「刪除所有數據，只寫情節」"],a:[1],e:"故事中納入圖表資料並以「暗示關係」呈現，不誇大、不刪改，保留原意。",t:"保留原意 = 資料要放進去 + 不誇大。"},
+ {q:"下列哪種格式轉換適合作為正規報告？",o:["將散點圖轉換為宣傳單","將淨利潤資料轉換為語音","將每週淨利潤資料的格式轉換為季度報告，總結每個季度的總淨利潤和平均淨利潤","將淨利潤轉成一首詩"],a:[2],e:"季度報告含總計與平均，是正規財務報告格式；宣傳單、語音不適合作為正規報告。",t:"正規報告 = 彙總（總和 + 平均）。"}
+]},
+c4: {title:"考綱四：倫理、法律、社會影響與安全", short:"考綱四 倫理", items:[
+ {q:"下列哪些是生成式 AI 對社會的正面影響？（複選）",o:["可存取海量資料進行醫學研究","可促進高效耕作","可詳細瞭解世界文化","可完全取代人類，不需任何監督"],a:[0,1,2],e:"醫療、農業、文化都是正面應用；AI 仍需人為監督，不能完全取代。",t:"正面影響「醫、農、文」。"},
+ {q:"企業未採取防護措施保護客戶敏感健康資料，可能導致哪些後果？（複選）",o:["客戶身分被盜用","陷入消費者資料隱私的訴訟","客戶缺乏信任","模型運算速度變快"],a:[0,1,2],e:"個資外洩會造成身分盜用、法律訴訟與信任流失；與運算速度無關。",t:"個資外洩三傷：「被盜、被告、被討厭」。"},
+ {q:"關於客服聊天機器人的風險，下列哪些敘述正確？（複選）",o:["對敏感個人與財務資料處理不當，可能導致客戶不滿","由於缺乏人為監督，存在不準確的問題","歧視性輸入會導致偏見","聊天機器人保證零錯誤"],a:[0,1,2],e:"前三項皆為真實風險；任何 AI 都無法保證零錯誤。",t:"客服風險「資料、監督、偏見」。"},
+ {q:"下列關於 AI 偏見的敘述，何者「錯誤」？",o:["使用有偏見資料訓練的圖像模型，會輸出有偏見的圖像","ChatGPT 能可靠地消除回覆中的偏見","應人工審查 AI 生成內容是否存在偏見","偏見可能出現在資料收集階段"],a:[1],e:"AI 無法可靠地自行消除偏見，仍需人工審查。",t:"偏見要靠「人」來抓，不能交給 AI 自己抓。"},
+ {q:"自駕車案例：「攝像頭僅在白天錄製影片」屬於哪個階段的偏見？",o:["資料收集","數據標注","模型訓練","部署"],a:[0],e:"只蒐集白天影像，資料本身就不完整，屬於資料收集偏見。",t:"「收、標、訓、部」—— 拍攝 = 收。"},
+ {q:"自駕車案例：「僅對停車標誌與交通信號燈進行分詞（標註）」屬於哪個階段的偏見？",o:["資料收集","數據標注","模型訓練","部署"],a:[1],e:"只標註部分物件，屬於數據標注階段的偏見。",t:"貼標籤 = 標。"},
+ {q:"自駕車案例：「資料包括根據身高採用不同加權值的行人」屬於哪個階段的偏見？",o:["資料收集","數據標注","模型訓練","部署"],a:[2],e:"加權值是訓練時的設定，屬於模型訓練偏見。",t:"「加權」= 上課時偏心 → 訓。"},
+ {q:"自駕車案例：「汽車銷往各處，但僅在單一城市進行測試」屬於哪個階段的偏見？",o:["資料收集","數據標注","模型訓練","部署"],a:[3],e:"上市銷售（部署）的範圍遠大於測試範圍，屬於部署偏見。",t:"「銷往各處」= 出門上路 → 部。"},
+ {q:"下列哪種方法「不適合」用來驗證 AI 輸出的正確性？",o:["在網際網路上搜尋，查證學術資源中的事實","參考可靠的歷史資料庫查證","參考權威機構報告查證","使用另一個 AI 平台查證事實"],a:[3],e:"另一個 AI 可能產生相同的幻覺或偏見，無法作為可靠查證來源。",t:"「AI 不能幫 AI 作證」。"},
+ {q:"企業導入 AI 招募流程時，需考慮哪些法律？（複選）",o:["個人資料保護法","勞動法","智慧財產權法","道路交通管理條例"],a:[0,1,2],e:"招募涉及求職者個資、勞動權益，以及 AI 產出內容的智財權。",t:"招募三法「個、勞、智」。"},
+ {q:"依最高法院規範，使用 AI 協助的發明要申請專利，下列何者正確？",o:["AI 可以登記為唯一發明人","完全由 AI 生成即可申請","必須包含實質人類貢獻，例如「使用人工智慧更正現有設計中不準確的地方」","AI 參與的發明一律不得申請專利"],a:[2],e:"AI 不能是唯一發明者；人類以 AI 為工具並做出實質貢獻，才能申請專利。",t:"「AI 是工具，人才是發明人」。"},
+ {q:"為避免個人資訊洩漏，下列哪些資訊不應放入提示詞？（複選）",o:["姓名","年齡","位置","社群媒體帳號"],a:[0,1,2,3],e:"姓名、年齡、位置、社群帳號都屬於可識別個人資訊 (PII)。",t:"PII 四寶「名、齡、位、帳」——全部不放。"},
+ {q:"使用生成式 AI 建立的內容，法律責任歸屬為何？",o:["由 AI 公司全權負責","使用者必須對建立的內容負責，有害或侵權內容可能引發民事或刑事訴訟","沒有人需要負責","由網路平台負責"],a:[1],e:"使用者是內容的發布者與使用者，須自負法律責任。",t:"「誰用誰負責」。"}
+]}
+};
+
+const EN_QUIZ = [
+ {q:"___ am learning how to write better prompts.",o:["I","Me","My","Mine"],a:[0],e:"空格在動詞 am 前面當主詞，要用主格 I。",t:"動詞前 = 主格。"},
+ {q:"The teacher showed ___ how to use ChatGPT.（我們）",o:["we","us","our","ours"],a:[1],e:"空格在動詞 showed 後面當受詞，要用受格 us。",t:"動詞後 = 受格。"},
+ {q:"This is ___ AI project.（她的）",o:["she","her","hers","herself"],a:[1],e:"後面接名詞 AI project，要用所有格形容詞 her。",t:"後面有名詞 → my / your / his / her / its / our / their。"},
+ {q:"The final report is ___.（他們的）",o:["their","them","theirs","they"],a:[2],e:"後面沒有名詞、單獨使用，要用所有格代名詞 theirs。",t:"後面沒名詞 → mine / yours / theirs。"},
+ {q:"The model updates ___ data every week.",o:["it's","its","it","itself"],a:[1],e:"its = 它的（所有格）；it's = it is。這裡要「它的資料」。",t:"有撇號 it's = it is，沒撇號 its = 它的。"},
+ {q:"She checked the facts by ___.",o:["her","hers","herself","she"],a:[2],e:"by oneself = 獨自、靠自己，用反身代名詞 herself。",t:"「自己」→ -self / -selves。"},
+ {q:"ChatGPT ___ text based on your prompt.",o:["generate","generates","generating","generated to"],a:[1],e:"ChatGPT 是第三人稱單數，現在簡單式動詞要加 -s。",t:"他她它，動詞要加 s。"},
+ {q:"The AI tool ___ the facts before it answers.",o:["verify","verifys","verifies","verifyes"],a:[2],e:"verify 是「子音 + y」結尾，去 y 加 ies → verifies。",t:"子音 + y → ies；母音 + y → s（deploys）。"},
+ {q:"My classmate ___ a new laptop for AI work.",o:["have","has","haves","having"],a:[1],e:"主詞是第三人稱單數，have 要變成 has。",t:"have 的第三人稱單數是特例 has。"},
+ {q:"___ the chatbot understand Chinese?",o:["Do","Does","Is","Are"],a:[1],e:"主詞 the chatbot 是第三人稱單數，一般動詞疑問句用 Does，後面動詞回原形。",t:"does 扛走 s，動詞回原形。"},
+ {q:"We ___ a new model right now.",o:["train","trained","are training","have train"],a:[2],e:"right now 表示「正在」，用現在進行式 are + V-ing。",t:"now → 進行式。"},
+ {q:"They ___ the chatbot yesterday.",o:["test","tests","tested","will test"],a:[2],e:"yesterday 表示過去，用過去式 tested。",t:"yesterday → 過去式。"},
+ {q:"I ___ check the facts tomorrow.",o:["will","am","did","has"],a:[0],e:"tomorrow 表示未來，用 will + 原形動詞。",t:"tomorrow → will。"},
+ {q:"She has already ___ three prompts.",o:["write","wrote","written","writing"],a:[2],e:"has + 過去分詞（現在完成式），write 的過去分詞是 written。",t:"write-wrote-written（ABC 型）。"},
+ {q:"The engineers ___ a new AI system last year.",o:["build","builded","built","building"],a:[2],e:"last year 用過去式；build 是不規則動詞，過去式為 built。",t:"build-built-built（ABB 型）。"},
+ {q:"The teacher ___ us prompt engineering last week.",o:["teached","taught","teaches","teach"],a:[1],e:"teach 是不規則動詞，過去式 taught。",t:"-ought / -aught 一族：taught、thought、bought。"},
+ {q:"Which verb means「預測」?",o:["generate","predict","deploy","label"],a:[1],e:"predict = 預測；generate = 生成；deploy = 部署；label = 標注。",t:"pre-（事先）+ dict（說）= 事先說出 → 預測。"},
+ {q:"Which verb means「查證」?",o:["verify","refine","collect","summarize"],a:[0],e:"verify = 查證、驗證；refine = 優化；collect = 收集；summarize = 總結。",t:"veri- = true（真實），verify = 確認是真的。"},
+ {q:"Choose the correct sentence.",o:["He don't use AI tools.","He doesn't uses AI tools.","He doesn't use AI tools.","He not use AI tools."],a:[2],e:"第三人稱單數否定用 doesn't + 原形動詞 use。",t:"doesn't 後面動詞一定回原形。"},
+ {q:"Choose the correct sentence.",o:["Users is responsible for AI content.","Users are responsible for AI content.","Users am responsible for AI content.","Users be responsible for AI content."],a:[1],e:"Users 是複數，be 動詞用 are。",t:"複數通通都用 are。"}
+];
+
+const SENTENCES = [
+ ["I use ChatGPT to summarize my notes.","我用 ChatGPT 總結我的筆記。","主格 I、所有格 my"],
+ ["You should verify the facts yourself.","你應該自己查證事實。","反身代名詞 yourself"],
+ ["He trains a model on clean data.","他用乾淨的資料訓練模型。","第三人稱單數 trains"],
+ ["She writes clear prompts for her team.","她為她的團隊撰寫清楚的提示詞。","writes、所有格 her"],
+ ["The AI tool generates images and text.","這個 AI 工具生成圖像和文字。","generates（+s）"],
+ ["It predicts the temperature in 2200.","它預測 2200 年的氣溫。","predicts（+s）"],
+ ["We are collecting a new dataset now.","我們現在正在收集新的資料集。","現在進行式 are collecting"],
+ ["They tested the chatbot in one city only.","他們只在一個城市測試了聊天機器人。","過去式 tested"],
+ ["The company will deploy the system next month.","公司下個月將部署這個系統。","未來式 will deploy"],
+ ["She has refined her prompt three times.","她已經優化了她的提示詞三次。","現在完成式 has refined"],
+ ["Don't put your name or address in a prompt.","不要把你的姓名或地址放進提示詞。","所有格 your、PII 觀念"],
+ ["Users are responsible for the content they create.","使用者須對他們建立的內容負責。","複數 are、主格 they"],
+ ["Does the chatbot protect customer data?","聊天機器人有保護客戶資料嗎？","Does + 原形 protect"],
+ ["AI cannot be the only inventor of a patent.","AI 不能是專利的唯一發明人。","助動詞 can + 原形 be"],
+ ["The teacher taught us chain-of-thought prompting.","老師教我們思維鏈提示法。","不規則 taught、受格 us"],
+ ["Humans should review AI content for bias.","人類應審查 AI 內容是否有偏見。","should + 原形 review"]
+];
+
+/* ===== 狀態（存 localStorage，可失敗） ===== */
+const LS_KEY = "ccs_ai_quiz_v1";
+let store = {};
+try { store = JSON.parse(localStorage.getItem(LS_KEY) || "{}") || {}; } catch(e) { store = {}; }
+function save(){ try { localStorage.setItem(LS_KEY, JSON.stringify(store)); } catch(e){} }
+
+const L = "ABCDEFGH";
+function shuffle(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+/* 關鍵字標示：支援空白分隔多個關鍵字，不分大小寫 */
+function terms(q){ return q.trim().toLowerCase().split(/\s+/).filter(Boolean); }
+function hl(s, ts){
+  if(!ts || !ts.length) return esc(s);
+  const re = new RegExp("(" + ts.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")", "gi");
+  return String(s).split(re).map((p,i) => i % 2 ? `<mark>${esc(p)}</mark>` : esc(p)).join("");
+}
+
+/* 產生一組題目 */
+function renderQuiz(container, key, items, opts = {}){
+  const order = opts.keepOrder ? items.map((_,i)=>i) : items.map((_,i)=>i);
+  const state = {answered:0, correct:0, total:items.length};
+  const f = s => hl(s, opts.hl);
+  container.innerHTML = `
+    ${opts.heading ? `<h2>${esc(opts.heading)}</h2>` : ""}
+    <div class="toolbar">
+      <button class="btn" data-act="reset">重新作答（打亂選項）</button>
+      <button class="btn" data-act="reveal">顯示全部答案</button>
+      <span class="score" data-score></span>
+    </div>
+    <div data-list></div>`;
+  const list = container.querySelector("[data-list]");
+  const scoreEl = container.querySelector("[data-score]");
+  const upd = () => { scoreEl.textContent = `已作答 ${state.answered} / ${state.total}　答對 ${state.correct}`; };
+
+  order.forEach((idx, n) => {
+    const it = items[idx];
+    const id = opts.idOf ? opts.idOf(it, idx) : `${key}-${idx}`;
+    const multi = it.a.length > 1;
+    const perm = it.fix ? it.o.map((_,i)=>i) : shuffle(it.o.map((_,i)=>i));
+    const card = document.createElement("div");
+    card.className = "card q";
+    card.innerHTML = `
+      <div class="qhead"><span class="num">${n+1}.</span><div>${f(it.q)}${multi?'<span class="tag">複選</span>':''}${opts.srcLabel?`<span class="tag">${esc(opts.srcLabel(it))}</span>`:''}</div></div>
+      <div class="opts">${perm.map((oi,k)=>`<button class="opt" data-oi="${oi}"><span class="letter">${L[k]}</span><span>${f(it.o[oi])}</span></button>`).join("")}</div>
+      ${multi?'<button class="btn primary" data-submit disabled>送出答案</button>':''}
+      <div class="explain">
+        <div class="verdict" data-verdict></div>
+        <div><b>正確答案：</b>${perm.map((oi,k)=>it.a.includes(oi)?L[k]:null).filter(Boolean).join("、")}</div>
+        <div><b>解析：</b>${f(it.e)}</div>
+        <div class="tip"><b>記憶技巧：</b>${f(it.t)}</div>
+      </div>`;
+    const btns = [...card.querySelectorAll(".opt")];
+    const sub = card.querySelector("[data-submit]");
+    let done = false;
+    const finish = (picked, silent) => {
+      if(done) return; done = true;
+      card.classList.add("done");
+      btns.forEach(b => { b.disabled = true; const oi=+b.dataset.oi;
+        if(it.a.includes(oi)) b.classList.add("right");
+        else if(picked.includes(oi)) b.classList.add("wrong"); });
+      if(sub) sub.disabled = true;
+      const v = card.querySelector("[data-verdict]");
+      if(silent){ v.textContent = "（顯示答案）"; v.style.color = "var(--muted)"; return; }
+      const ok = picked.length===it.a.length && picked.every(x=>it.a.includes(x));
+      state.answered++; if(ok) state.correct++; upd();
+      v.textContent = ok ? "✔ 答對了！" : "✘ 答錯了";
+      v.style.color = ok ? "var(--ok)" : "var(--bad)";
+      if(opts.track !== false){
+        store.wrong = store.wrong || {};
+        if(ok) delete store.wrong[id]; else store.wrong[id] = 1;
+        save(); refreshWrongCount();
+      }
+    };
+    btns.forEach(b => b.addEventListener("click", () => {
+      if(done) return;
+      if(!multi){ finish([+b.dataset.oi]); return; }
+      b.classList.toggle("sel");
+      sub.disabled = !btns.some(x=>x.classList.contains("sel"));
+    }));
+    if(sub) sub.addEventListener("click", () => finish(btns.filter(x=>x.classList.contains("sel")).map(x=>+x.dataset.oi)));
+    card._reveal = () => finish([], true);
+    list.appendChild(card);
+  });
+  upd();
+  container.querySelector('[data-act="reset"]').onclick = () => renderQuiz(container, key, items, opts);
+  container.querySelector('[data-act="reveal"]').onclick = () => list.querySelectorAll(".q").forEach(c => c._reveal());
+}
+
+/* ===== 錯題本 ===== */
+function wrongItems(){
+  const w = (store.wrong)||{}; const out = [];
+  Object.keys(BANK).forEach(k => BANK[k].items.forEach((it,i) => { if(w[`${k}-${i}`]) out.push({...it, _k:k, _i:i}); }));
+  return out;
+}
+function renderWrong(){
+  const el = document.getElementById("p-wrong");
+  const items = wrongItems();
+  if(!items.length){ el.innerHTML = `<h2>錯題本</h2><div class="card">目前沒有錯題。在各考綱分頁作答答錯的題目會自動收錄在這裡，答對後即移除。</div>`; return; }
+  renderQuiz(el, "wrong", items, {heading:`錯題本（${items.length} 題）`, idOf:(it)=>`${it._k}-${it._i}`, srcLabel:(it)=>BANK[it._k].short});
+}
+function refreshWrongCount(){
+  const b = document.querySelector('.tabs button[data-p="wrong"]');
+  if(b) b.textContent = `錯題本 (${wrongItems().length})`;
+}
+
+/* ===== 分頁 ===== */
+const TABS = [["summary","重點整理"],["c1",BANK.c1.short],["c2",BANK.c2.short],["c3",BANK.c3.short],["c4",BANK.c4.short],["wrong","錯題本"],["en","英文"]];
+const tabsEl = document.getElementById("tabs");
+TABS.forEach(([id,label]) => { const b=document.createElement("button"); b.textContent=label; b.dataset.p=id; b.onclick=()=>show(id); tabsEl.appendChild(b); });
+function show(id, fromSearch){
+  if(!fromSearch && id !== "search"){
+    const s = document.getElementById("search"); if(s && s.value){ s.value = ""; document.getElementById("search-clear").hidden = true; }
+  }
+  if(id === "search" && !fromSearch) id = "summary";
+  document.querySelectorAll("section.page").forEach(s => s.classList.toggle("active", s.id===`p-${id}`));
+  tabsEl.querySelectorAll("button").forEach(b => b.classList.toggle("active", b.dataset.p===id));
+  if(id==="wrong") renderWrong();
+  if(id !== "search"){
+    try{ localStorage.setItem(LS_KEY+"_tab", id); }catch(e){}
+    if(location.hash !== "#"+id) history.replaceState(null,"","#"+id);
+  }
+  window.scrollTo(0,0);
+}
+["c1","c2","c3","c4"].forEach(k => renderQuiz(document.getElementById(`p-${k}`), k, BANK[k].items, {heading:`${BANK[k].title}（${BANK[k].items.length} 題）`}));
+renderQuiz(document.getElementById("en-quiz"), "en", EN_QUIZ, {heading:`英文考題（${EN_QUIZ.length} 題）`, track:false});
+document.getElementById("sent-list").innerHTML = SENTENCES.map(([en,zh,note]) =>
+  `<div class="card"><div class="en">${esc(en)}</div><div class="zh">${esc(zh)}</div><div style="margin-top:6px"><span class="key">${esc(note)}</span></div></div>`).join("");
+document.querySelectorAll("#en-sub button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#en-sub button").forEach(x => x.classList.toggle("active", x===b));
+  document.querySelectorAll(".en-part").forEach(p => p.hidden = p.id !== `en-${b.dataset.s}`);
+});
+refreshWrongCount();
+
+/* ===== 關鍵字搜尋 ===== */
+const SUMMARY_SNIPPETS = [...document.querySelectorAll("#p-summary li, #p-summary tr, #p-summary .tip, #en-pron .tip, #en-verb tr, #en-verb .tip")]
+  .filter(el => !el.querySelector("th"))
+  .map(el => {
+    const sec = el.closest("section");
+    const card = el.closest(".card");
+    const h = card && card.querySelector("h3");
+    const page = sec.id === "p-summary" ? "重點整理" : "英文";
+    const text = el.tagName === "TR" ? [...el.cells].map(c => c.textContent.trim()).join(" ｜ ") : el.textContent;
+    return {text: text.replace(/\s+/g, " ").trim(), src: page + (h ? "｜" + h.textContent : "")};
+  });
+const ALL_Q = [];
+Object.keys(BANK).forEach(k => BANK[k].items.forEach((it,i) => ALL_Q.push({...it, _k:k, _i:i, _src:BANK[k].short})));
+EN_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"en", _i:i, _src:"英文考題"}));
+const searchEl = document.getElementById("search");
+const clearEl = document.getElementById("search-clear");
+let lastTab = "summary", searchTimer;
+function matchAll(text, ts){ const s = text.toLowerCase(); return ts.every(t => s.includes(t)); }
+function runSearch(){
+  const raw = searchEl.value;
+  const ts = terms(raw);
+  clearEl.hidden = !raw;
+  if(!ts.length){ if(document.getElementById("p-search").classList.contains("active")) show(lastTab); return; }
+  const qs = ALL_Q.filter(it => matchAll([it.q, ...it.o, it.e, it.t].join(" "), ts));
+  const sn = SUMMARY_SNIPPETS.filter(s => matchAll(s.text, ts));
+  const sents = SENTENCES.filter(s => matchAll(s.join(" "), ts));
+  document.getElementById("search-title").textContent = `搜尋「${raw.trim()}」：題目 ${qs.length} 題、重點 ${sn.length + sents.length} 則`;
+  let html = "";
+  if(sn.length) html += `<div class="hitgroup">重點整理 / 文法重點</div>` + sn.map(s => `<div class="card"><div class="hitsrc">${esc(s.src)}</div>${hl(s.text, ts)}</div>`).join("");
+  if(sents.length) html += `<div class="hitgroup">英文例句</div>` + sents.map(([en,zh,note]) => `<div class="card"><div class="en">${hl(en,ts)}</div><div class="zh">${hl(zh,ts)}</div><span class="key">${hl(note,ts)}</span></div>`).join("");
+  if(!qs.length && !html) html = `<div class="card">找不到符合的內容，試試其他關鍵字（多個關鍵字用空白分隔，需同時符合）。</div>`;
+  document.getElementById("search-summary").innerHTML = html;
+  const quizEl = document.getElementById("search-quiz");
+  if(qs.length) renderQuiz(quizEl, "search", qs, {heading:"相關題目", hl:ts, idOf:it=>`${it._k}-${it._i}`, srcLabel:it=>it._src, track:false});
+  else quizEl.innerHTML = "";
+  if(!document.getElementById("p-search").classList.contains("active")){
+    const cur = tabsEl.querySelector("button.active"); if(cur) lastTab = cur.dataset.p;
+    show("search", true);
+  }
+}
+searchEl.addEventListener("input", () => { clearTimeout(searchTimer); searchTimer = setTimeout(runSearch, 200); });
+searchEl.addEventListener("keydown", e => { if(e.key === "Escape"){ searchEl.value = ""; runSearch(); } });
+clearEl.onclick = () => { searchEl.value = ""; runSearch(); searchEl.focus(); };
+
+let start = location.hash.slice(1);
+if(!TABS.some(t=>t[0]===start)){ try{ start = localStorage.getItem(LS_KEY+"_tab") || "summary"; }catch(e){ start="summary"; } }
+show(TABS.some(t=>t[0]===start) ? start : "summary");
+</script>
+</body>
+</html>
