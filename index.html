@@ -83,7 +83,10 @@ th{background:var(--brand-soft);color:var(--brand)}
 mark{background:#ffe066;color:#1d2433;border-radius:3px;padding:0 1px}
 .hitsrc{font-size:.8rem;color:var(--muted);margin-bottom:4px}
 .hitgroup{margin:18px 0 6px;font-weight:700;color:var(--brand)}
-footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px 20px 80px}
+#to-top{position:fixed;right:16px;bottom:16px;z-index:20;display:flex;align-items:center;gap:4px;border:1px solid var(--brand);background:var(--brand);color:#fff;font:inherit;font-size:.9rem;font-weight:600;padding:9px 14px;border-radius:999px;cursor:pointer;box-shadow:0 2px 8px rgba(20,30,60,.25);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s}
+#to-top.show{opacity:1;visibility:visible;transform:none}
+#to-top:focus-visible{outline:3px solid var(--tip);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -849,6 +852,7 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
 </section>
 
 </main>
+<button id="to-top" type="button" aria-label="回到頂端">▲ 回到頂端</button>
 <footer>資料來源：CCS_AI_題庫總整理 MEMO｜作答紀錄只存在本機瀏覽器</footer>
 
 <script>
@@ -1357,6 +1361,13 @@ clearEl.onclick = () => { searchEl.value = ""; runSearch(); searchEl.focus(); };
 let start = location.hash.slice(1);
 if(!TABS.some(t=>t[0]===start)){ try{ start = localStorage.getItem(LS_KEY+"_tab") || "summary"; }catch(e){ start="summary"; } }
 show(TABS.some(t=>t[0]===start) ? start : "summary");
+
+/* ===== 回到頂端 ===== */
+const toTop = document.getElementById("to-top");
+const updToTop = () => toTop.classList.toggle("show", window.scrollY > 300);
+window.addEventListener("scroll", updToTop, {passive:true});
+toTop.onclick = () => window.scrollTo({top:0, behavior:"smooth"});
+updToTop();
 </script>
 </body>
 </html>
