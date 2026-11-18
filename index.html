@@ -318,6 +318,7 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
       <button data-s="subj" class="active">主動詞</button>
       <button data-s="ques">疑問句</button>
       <button data-s="rule">文法</button>
+      <button data-s="test">英文小考解析</button>
       <button data-s="mock">模擬試題</button>
     </div>
 
@@ -466,6 +467,26 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
           <tr><td>There are a book.</td><td>There <b>is</b> a book.<br><span class="zh">有一本書。</span></td><td>a book 是單數</td></tr>
         </table></div>
       </div>
+    </div>
+
+    <!-- 英文小考解析 -->
+    <div id="gram-test" class="gram-part" hidden>
+      <div class="card">
+        <h3>英文小考：考什麼？</h3>
+        <div class="tablewrap"><table>
+          <tr><th>大題</th><th>考點</th><th>判斷方法</th></tr>
+          <tr><td>一、配合題（1～12）</td><td>be 動詞 am / is / are、It's / Its、所有格 my</td><td>看<b>主詞</b>：I → am；他她它、單數 → is；你、我們、他們、複數 → are</td></tr>
+          <tr><td>二、填空 1～5、11～15</td><td>肯定句的一般動詞要不要加 -s / -es</td><td>主詞是<b>第三人稱單數</b>（he、she、my father、Tom、the sun）→ 加 s；其他 → 原形</td></tr>
+          <tr><td>二、填空 6～10、16～20</td><td>疑問句 Do / Does 後面的動詞</td><td>句子裡有 <b>do / does</b> → 動詞一律<b>原形</b>，不加 s</td></tr>
+        </table></div>
+        <div class="tip"><b>易錯提醒：</b>
+          <br>① <b>My father ___ (work) in a hospital.</b> 答案是 <b>works</b>。My father 就是 he，記得加 s。
+          <br>② <b>She ___ (watch) TV.</b> 答案是 <b>watches</b>。ch 結尾要加 <b>es</b>，不是只加 s。
+          <br>③ <b>Does he ___ (speak)…?</b> 答案是 <b>speak</b>。Does 已經幫忙加過 s 了，動詞回原形。</div>
+        <div class="tip"><b>記憶口訣：</b>「<b>主詞是他她它，動詞加 s；看到 do / does，動詞回原形</b>」。</div>
+      </div>
+      <div id="gram-test-a"></div>
+      <div id="gram-test-b"></div>
     </div>
 
     <!-- 模擬試題 -->
@@ -952,6 +973,46 @@ const GRAM_QUIZ = [
  {q:"___ your parents at home now?",o:["Is","Are","Do","Does"],a:[1],fix:true,e:"your parents 是複數，at home 是地點（be 動詞），用 Are。",t:"複數 → Are。"}
 ];
 
+/* 英文小考（依考卷）：一、配合題；二、動詞填空 */
+const T_BE = ["am","are","is"];
+const TEST_A = [
+ {q:"It ___ a flower.",zh:"它是一朵花。",o:T_BE,a:[2],e:"主詞 It（它）是第三人稱單數，be 動詞用 is。",t:"is 給他她它。"},
+ {q:"The book ___ on the desk.",zh:"這本書在桌上。",o:T_BE,a:[2],e:"The book 是單數名詞，等於 it，用 is。這裡 is 表示「在」。",t:"單數名詞 = it → is。"},
+ {q:"We ___ happy.",zh:"我們很快樂。",o:T_BE,a:[1],e:"We（我們）是複數，用 are。",t:"are 給你們大家。"},
+ {q:"They ___ teachers.",zh:"他們是老師。",o:T_BE,a:[1],e:"They（他們）是複數，用 are；後面 teachers 也是複數。",t:"They → are。"},
+ {q:"He ___ my brother.",zh:"他是我的哥哥（弟弟）。",o:T_BE,a:[2],e:"He（他）是第三人稱單數，用 is。",t:"he、she、it → is。"},
+ {q:"I ___ short.",zh:"我很矮。",o:T_BE,a:[0],e:"主詞 I 只能配 am。",t:"I 用 am，獨一無二。"},
+ {q:"She ___ sick.",zh:"她生病了。",o:T_BE,a:[2],e:"She（她）是第三人稱單數，用 is。",t:"she → is。"},
+ {q:"Tom and Jerry ___ students.",zh:"Tom 和 Jerry 是學生。",o:T_BE,a:[1],e:"Tom and Jerry 是兩個人，等於 they，用 are。",t:"A and B = 複數 → are。"},
+ {q:"Mother ___ home.",zh:"媽媽在家。",o:T_BE,a:[2],e:"Mother（媽媽）是一個人，等於 she，用 is。",t:"一個人（mother、father、Tom）→ is。"},
+ {q:"You ___ great.",zh:"你很棒。",o:T_BE,a:[1],e:"You 不論是「你」或「你們」，be 動詞都用 are。",t:"you 永遠配 are。"},
+ {q:"___ a dog.",zh:"它是一隻狗。",o:["Its","It's"],a:[1],fix:true,e:"句子缺「主詞 + 動詞」，It's = It is（它是）。Its 是「它的」，後面要接名詞，不能當主詞。",t:"有撇號 It's = It is；沒撇號 Its = 它的。"},
+ {q:"This is ___ pen.",zh:"這是我的筆。",o:["my","me","I"],a:[0],fix:true,e:"pen 是名詞，前面要用所有格 my（我的）。me 是受格，I 是主格。",t:"名詞前面放所有格：my、your、his、her、its、our、their。"}
+];
+const TEST_B = [
+ {q:"He ___ (like) ice cream.",zh:"他喜歡冰淇淋。",o:["like","likes"],a:[1],fix:true,e:"He 是第三人稱單數，肯定句動詞加 s → likes。",t:"他她它，動詞加 s。"},
+ {q:"They ___ (play) football after school.",zh:"他們放學後踢足球。",o:["play","plays"],a:[0],fix:true,e:"They 是複數，動詞用原形 play。",t:"複數主詞 → 原形。"},
+ {q:"She ___ (watch) TV every evening.",zh:"她每天晚上看電視。",o:["watch","watchs","watches"],a:[2],fix:true,e:"She 是第三人稱單數要加 s；watch 字尾是 ch，要加 es → watches。",t:"字尾 s、x、ch、sh、o → 加 es。"},
+ {q:"We ___ (go) to school by bus.",zh:"我們搭公車上學。",o:["go","goes"],a:[0],fix:true,e:"We 是複數，動詞用原形 go。",t:"we → 原形。"},
+ {q:"My father ___ (work) in a hospital.",zh:"我的爸爸在醫院工作。",o:["work","works"],a:[1],fix:true,e:"My father（我的爸爸）是一個人，等於 he，動詞要加 s → works。這題考卷上寫成 work 被扣分，是最容易錯的地方！",t:"看到 my father、my mother、Tom 先換成 he / she，再決定加 s。"},
+ {q:"Do you ___ (read) books every night?",zh:"你每天晚上都看書嗎？",o:["read","reads"],a:[0],fix:true,e:"疑問句有 Do，動詞用原形 read。",t:"看到 do / does，動詞回原形。"},
+ {q:"Does he ___ (speak) English well?",zh:"他英文說得好嗎？",o:["speak","speaks"],a:[0],fix:true,e:"Does 已經表示第三人稱單數，後面動詞回原形 speak，不能再加 s。",t:"Does 把 s 拿走了。"},
+ {q:"Where does your sister ___ (live)?",zh:"你的姊姊（妹妹）住在哪裡？",o:["live","lives"],a:[0],fix:true,e:"Wh- 疑問句裡有 does，動詞用原形 live。",t:"疑問詞 + does + 主詞 + 原形。"},
+ {q:"Do they ___ (study) hard for the test?",zh:"他們為了考試認真讀書嗎？",o:["study","studies"],a:[0],fix:true,e:"疑問句有 Do，動詞用原形 study。",t:"Do 後面 → 原形。"},
+ {q:"What time does the train ___ (leave)?",zh:"火車幾點出發？",o:["leave","leaves"],a:[0],fix:true,e:"句中有 does，動詞用原形 leave。",t:"does 出現，動詞不加 s。"},
+ {q:"The sun ___ (rise) in the east.",zh:"太陽從東方升起。",o:["rise","rises"],a:[1],fix:true,e:"The sun 是單數（it），描述不變的事實用現在簡單式，加 s → rises。",t:"不變的真理用現在式；the sun = it → 加 s。"},
+ {q:"My friends ___ (visit) me on Sundays.",zh:"我的朋友們每週日來看我。",o:["visit","visits"],a:[0],fix:true,e:"My friends 是複數（字尾有 s），動詞用原形 visit。",t:"名詞有 s（複數），動詞就不加 s。"},
+ {q:"She always ___ (drink) coffee in the morning.",zh:"她總是在早上喝咖啡。",o:["drink","drinks"],a:[1],fix:true,e:"She 是第三人稱單數，加 s → drinks。always 是頻率副詞，不影響動詞變化。",t:"中間夾 always / usually，照樣看主詞。"},
+ {q:"I ___ (like) swimming very much.",zh:"我非常喜歡游泳。",o:["like","likes"],a:[0],fix:true,e:"主詞 I 用原形 like。",t:"I 和 you 不加 s。"},
+ {q:"Tom ___ (play) the guitar in a band.",zh:"Tom 在樂團裡彈吉他。",o:["play","plays","plaies"],a:[1],fix:true,e:"Tom = he，要加 s；play 是「母音 a + y」結尾，直接加 s → plays（不是 plaies）。",t:"母音 + y → 加 s；子音 + y → 去 y 加 ies（study → studies）。"},
+ {q:"Do you ___ (like) chocolate?",zh:"你喜歡巧克力嗎？",o:["like","likes"],a:[0],fix:true,e:"疑問句有 Do，動詞用原形 like。",t:"Do 後面 → 原形。"},
+ {q:"Does Mary ___ (go) to school by bike?",zh:"Mary 騎腳踏車上學嗎？",o:["go","goes"],a:[0],fix:true,e:"Does 後面動詞用原形 go。",t:"Does 把 es 拿走：goes → go。"},
+ {q:"How often do you ___ (visit) your grandparents?",zh:"你多久去看一次你的祖父母？",o:["visit","visits"],a:[0],fix:true,e:"句中有 do，動詞用原形 visit。How often = 多常、多久一次。",t:"疑問詞 + do + 主詞 + 原形。"},
+ {q:"What does your teacher ___ (teach)?",zh:"你的老師教什麼？",o:["teach","teaches"],a:[0],fix:true,e:"句中有 does，動詞用原形 teach。",t:"does 出現，動詞回原形。"},
+ {q:"Do cats ___ (like) water?",zh:"貓喜歡水嗎？",o:["like","likes"],a:[0],fix:true,e:"疑問句有 Do，動詞用原形 like。",t:"Do 後面 → 原形。"}
+];
+TEST_A.forEach(it => it.fix = true);
+
 const GRAM_ZH = ["我是學生。","她是我的英文老師。","他們在會議室裡。","我哥哥和我今天很忙。","這個資訊非常有用。","現在大家都在這裡。","我的一位同事來自日本。","昨天我非常累。","我們昨晚在家。","他每天搭公車去上班。",
  "A 我是護士。B 我去上學。C（am 和 go 並用，錯誤）D 我正要去上學。","她是護士嗎？","你喜歡咖啡嗎？","你的主管會說英文嗎？","他們昨天完成報告了嗎？","他住在台北嗎？","Tom 是你的同事嗎？——是的，他是。","你是接待員嗎？——不，我不是。","他們在這裡工作嗎？——是的，他們是。","洗手間在哪裡？——在樓上。",
  "你叫什麼名字？——我的名字是 Amy。","你為什麼遲到？——因為公車誤點了。","你怎麼去上班？——搭公車。","房間裡有幾張椅子？——有六張。","辦公室裡有一台印表機。","這層樓有三間會議室。","儲藏櫃裡有任何用品嗎？","她現在不在櫃檯。","他不喜歡咖啡。","他們現在正在做這個專案。",
@@ -1225,6 +1286,8 @@ document.getElementById("bonus-table").innerHTML = DEPTS.map(([group, rows]) => 
 renderQuiz(document.getElementById("bonus-quiz"), "bonus", BONUS_QUIZ, {heading:`加分考題（${BONUS_QUIZ.length} 題）`, track:false});
 renderQuiz(document.getElementById("career-past"), "careerPast", CAREER_PAST, {heading:`測驗 14 題考古題`});
 renderQuiz(document.getElementById("career-extra"), "careerExtra", CAREER_EXTRA, {heading:`延伸練習 20 題`});
+renderQuiz(document.getElementById("gram-test-a"), "testA", TEST_A, {heading:`一、配合題（${TEST_A.length} 題）`, track:false});
+renderQuiz(document.getElementById("gram-test-b"), "testB", TEST_B, {heading:`二、動詞填空（${TEST_B.length} 題）`, track:false});
 renderQuiz(document.getElementById("gram-mock"), "gram", GRAM_QUIZ, {heading:`主動詞、疑問句、文法 模擬試題（${GRAM_QUIZ.length} 題）`, track:false});
 [["en-sub","en"],["notes-sub","notes"],["bonus-sub","bonus"],["career-sub","career"],["gram-sub","gram"]].forEach(([subId, prefix]) => {
   document.querySelectorAll(`#${subId} button`).forEach(b => b.onclick = () => {
@@ -1242,7 +1305,7 @@ document.getElementById("copy-prompt").onclick = async (e) => {
 refreshWrongCount();
 
 /* ===== 關鍵字搜尋 ===== */
-const SUMMARY_SNIPPETS = [...document.querySelectorAll("#p-summary li, #p-summary tr, #p-summary .tip, #en-pron .tip, #en-verb tr, #en-verb .tip, #p-notes tr, #p-notes li, #p-notes .tip, #notes-prompt, #p-bonus tr, #p-bonus li, #career-summary li, #career-summary tr, #career-summary .tip, #gram-subj tr, #gram-subj li, #gram-subj .tip, #gram-ques tr, #gram-ques .tip, #gram-rule tr, #gram-rule li, #gram-rule .tip")]
+const SUMMARY_SNIPPETS = [...document.querySelectorAll("#p-summary li, #p-summary tr, #p-summary .tip, #en-pron .tip, #en-verb tr, #en-verb .tip, #p-notes tr, #p-notes li, #p-notes .tip, #notes-prompt, #p-bonus tr, #p-bonus li, #career-summary li, #career-summary tr, #career-summary .tip, #gram-subj tr, #gram-subj li, #gram-subj .tip, #gram-ques tr, #gram-ques .tip, #gram-rule tr, #gram-rule li, #gram-rule .tip, #gram-test tr, #gram-test .tip")]
   .filter(el => !el.querySelector("th"))
   .map(el => {
     const sec = el.closest("section");
@@ -1256,6 +1319,8 @@ const ALL_Q = [];
 Object.keys(BANK).forEach(k => BANK[k].items.forEach((it,i) => ALL_Q.push({...it, _k:k, _i:i, _src:BANK[k].short})));
 EN_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"en", _i:i, _src:"英文考題"}));
 GRAM_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"gram", _i:i, _src:"英文文法模擬題"}));
+TEST_A.forEach((it,i) => ALL_Q.push({...it, _k:"testA", _i:i, _src:"英文小考 配合題"}));
+TEST_B.forEach((it,i) => ALL_Q.push({...it, _k:"testB", _i:i, _src:"英文小考 填空"}));
 NOTES_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"notes", _i:i, _src:"手寫筆記測驗"}));
 BONUS_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"bonus", _i:i, _src:"加分題"}));
 Object.keys(CAREER_SETS).forEach(k => CAREER_SETS[k].items.forEach((it,i) => ALL_Q.push({...it, _k:k, _i:i, _src:CAREER_SETS[k].short})));
