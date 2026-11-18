@@ -211,6 +211,7 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
     <button data-s="verb">動詞</button>
     <button data-s="sent">例句</button>
     <button data-s="quiz">考題</button>
+    <button data-s="gram">主動詞、疑問句、文法</button>
   </div>
 
   <div id="en-pron" class="en-part">
@@ -309,6 +310,167 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
   </div>
 
   <div id="en-quiz" class="en-part" hidden></div>
+
+  <!-- 主動詞、疑問句、文法 -->
+  <div id="en-gram" class="en-part" hidden>
+    <div class="tip"><b>考試重點：</b>老師說會考「<b>主詞 + 動詞</b>」、「<b>疑問句</b>」與「<b>文法（am / is / are…）</b>」。先看三個教學分頁，再做模擬試題。</div>
+    <div class="sub" id="gram-sub">
+      <button data-s="subj" class="active">主動詞</button>
+      <button data-s="ques">疑問句</button>
+      <button data-s="rule">文法</button>
+      <button data-s="mock">模擬試題</button>
+    </div>
+
+    <!-- 主動詞 -->
+    <div id="gram-subj" class="gram-part">
+      <div class="card">
+        <h3>1. 英文句子的骨架：主詞 + 動詞</h3>
+        <p>每個英文句子至少要有一個<b>主詞</b>（誰）和一個<b>動詞</b>（是什麼／做什麼）。動詞分兩種：</p>
+        <div class="tablewrap"><table>
+          <tr><th>種類</th><th>意思</th><th>例子</th></tr>
+          <tr><td><b>be 動詞</b></td><td>「是、在、狀態」</td><td>am / is / are（現在）、was / were（過去）</td></tr>
+          <tr><td><b>一般動詞</b></td><td>「動作」</td><td>work、go、like、have、study…</td></tr>
+        </table></div>
+        <div class="tip"><b>記憶技巧：</b>一個句子只要<b>一個主要動詞</b>。<b>I am go</b> ✗ —— am 和 go 都是動詞，打架了！要嘛 I <b>go</b>，要嘛 I <b>am going</b>。</div>
+      </div>
+      <div class="card">
+        <h3>2. 主詞決定 be 動詞</h3>
+        <div class="tablewrap"><table>
+          <tr><th>主詞</th><th>現在式</th><th>過去式</th><th>例句</th></tr>
+          <tr><td>I</td><td><b>am</b></td><td><b>was</b></td><td>I <b>am</b> a student. 我是學生。</td></tr>
+          <tr><td>he / she / it / 單數名詞 / 不可數名詞</td><td><b>is</b></td><td><b>was</b></td><td>She <b>is</b> my teacher. 她是我的老師。</td></tr>
+          <tr><td>you / we / they / 複數名詞</td><td><b>are</b></td><td><b>were</b></td><td>They <b>are</b> in the office. 他們在辦公室。</td></tr>
+        </table></div>
+        <div class="tip"><b>記憶技巧：</b>「<b>I 用 am，is 給他她它，are 給你們大家</b>」。過去式只要記：<b>am、is → was</b>；<b>are → were</b>。</div>
+      </div>
+      <div class="card">
+        <h3>3. 主詞決定一般動詞（主動詞一致）</h3>
+        <ul>
+          <li>主詞是 <b>he / she / it / 單數名詞</b>，現在式動詞<b>加 -s / -es</b>：He <b>works</b> in HR.、She <b>goes</b> to work by bus.</li>
+          <li>其他主詞（I / you / we / they / 複數）用<b>原形</b>：I <b>work</b>.、They <b>go</b> to school.</li>
+          <li>have 的第三人稱單數是 <b>has</b>：My boss <b>has</b> a meeting.</li>
+          <li>過去式不分主詞，全部用過去式：He <b>worked</b>.、They <b>worked</b>.</li>
+        </ul>
+        <div class="tip"><b>記憶技巧：</b>「<b>他她它，動詞要加 s</b>」—— 只有現在式、只有第三人稱單數才加。</div>
+      </div>
+      <div class="card">
+        <h3>4. 容易判斷錯的主詞</h3>
+        <div class="tablewrap"><table>
+          <tr><th>主詞</th><th>單/複數</th><th>例句</th></tr>
+          <tr><td>A <b>and</b> B（Tom and Mary、My brother and I）</td><td>複數 → are</td><td>Tom and Mary <b>are</b> coworkers.</td></tr>
+          <tr><td>不可數名詞（water、information、money）</td><td>單數 → is</td><td>The information <b>is</b> useful.</td></tr>
+          <tr><td>everyone / everybody / someone / nobody</td><td>單數 → is</td><td>Everyone <b>is</b> here.</td></tr>
+          <tr><td>one of + 複數名詞</td><td>單數（看 one）→ is</td><td>One of my friends <b>is</b> a nurse.</td></tr>
+          <tr><td>people / police / children</td><td>複數 → are</td><td>The children <b>are</b> happy.</td></tr>
+        </table></div>
+        <div class="tip"><b>記憶技巧：</b>「<b>and 變複數；every- 是一個一個算，所以單數；one of 看 one</b>」。</div>
+      </div>
+    </div>
+
+    <!-- 疑問句 -->
+    <div id="gram-ques" class="gram-part" hidden>
+      <div class="card">
+        <h3>1. be 動詞疑問句：把 be 動詞搬到句首</h3>
+        <div class="tablewrap"><table>
+          <tr><th>肯定句</th><th>疑問句</th><th>簡答</th></tr>
+          <tr><td>She <b>is</b> a nurse.</td><td><b>Is</b> she a nurse?</td><td>Yes, she <b>is</b>. / No, she <b>isn't</b>.</td></tr>
+          <tr><td>You <b>are</b> busy.</td><td><b>Are</b> you busy?</td><td>Yes, I <b>am</b>. / No, I<b>'m not</b>.</td></tr>
+          <tr><td>They <b>were</b> late.</td><td><b>Were</b> they late?</td><td>Yes, they <b>were</b>. / No, they <b>weren't</b>.</td></tr>
+          <tr><td>He <b>is</b> working.</td><td><b>Is</b> he working?</td><td>Yes, he <b>is</b>. / No, he <b>isn't</b>.</td></tr>
+        </table></div>
+        <div class="tip"><b>記憶技巧：</b>「<b>be 動詞自己跳到前面</b>」。注意：問 <b>you</b> 要用 <b>I</b> 回答（Are you…? → Yes, I am.）。肯定簡答<b>不能縮寫</b>：Yes, I am. ✓　Yes, I'm. ✗</div>
+      </div>
+      <div class="card">
+        <h3>2. 一般動詞疑問句：請 Do / Does / Did 來幫忙</h3>
+        <div class="tablewrap"><table>
+          <tr><th>肯定句</th><th>疑問句</th><th>簡答</th></tr>
+          <tr><td>You <b>like</b> coffee.</td><td><b>Do</b> you <b>like</b> coffee?</td><td>Yes, I <b>do</b>. / No, I <b>don't</b>.</td></tr>
+          <tr><td>He <b>works</b> in HR.</td><td><b>Does</b> he <b>work</b> in HR?</td><td>Yes, he <b>does</b>. / No, he <b>doesn't</b>.</td></tr>
+          <tr><td>They <b>went</b> home.</td><td><b>Did</b> they <b>go</b> home?</td><td>Yes, they <b>did</b>. / No, they <b>didn't</b>.</td></tr>
+        </table></div>
+        <div class="tip"><b>記憶技巧：</b>「<b>一般動詞不會跳，請 Do / Does / Did 幫忙；助動詞出現，動詞回原形</b>」。Does 把 s 拿走（works → work），Did 把過去式拿走（went → go）。<br>用什麼問，就用什麼答：Is → is、Do → do、Does → does、Did → did。</div>
+      </div>
+      <div class="card">
+        <h3>3. Wh- 疑問句：疑問詞 + 疑問句</h3>
+        <div class="tablewrap"><table>
+          <tr><th>疑問詞</th><th>問什麼</th><th>例句</th></tr>
+          <tr><td>What</td><td>什麼</td><td><b>What</b> is your name? 你叫什麼名字？</td></tr>
+          <tr><td>Where</td><td>哪裡</td><td><b>Where</b> is the restroom? 洗手間在哪裡？</td></tr>
+          <tr><td>When</td><td>何時</td><td><b>When</b> does the meeting start? 會議何時開始？</td></tr>
+          <tr><td>Who</td><td>誰</td><td><b>Who</b> is your manager? 你的主管是誰？</td></tr>
+          <tr><td>Why</td><td>為什麼</td><td><b>Why</b> are you late? 你為什麼遲到？</td></tr>
+          <tr><td>How</td><td>如何、怎樣</td><td><b>How</b> do you go to work? 你怎麼去上班？</td></tr>
+          <tr><td>How many</td><td>多少（可數）</td><td><b>How many</b> chairs are there? 有幾張椅子？</td></tr>
+          <tr><td>How much</td><td>多少（不可數 / 價錢）</td><td><b>How much</b> is it? 多少錢？</td></tr>
+          <tr><td>Which</td><td>哪一個</td><td><b>Which</b> room is yours? 哪間是你的？</td></tr>
+          <tr><td>Whose</td><td>誰的</td><td><b>Whose</b> bag is this? 這是誰的包包？</td></tr>
+        </table></div>
+        <div class="tip"><b>記憶技巧：</b>公式「<b>疑問詞 + (be / do / does / did) + 主詞 + …?</b>」。先寫 Yes/No 疑問句，再把疑問詞放最前面：Is the restroom upstairs? → <b>Where</b> is the restroom?</div>
+      </div>
+    </div>
+
+    <!-- 文法 -->
+    <div id="gram-rule" class="gram-part" hidden>
+      <div class="card">
+        <h3>1. 否定句</h3>
+        <div class="tablewrap"><table>
+          <tr><th>種類</th><th>公式</th><th>例句</th></tr>
+          <tr><td>be 動詞</td><td>am / is / are + <b>not</b></td><td>I <b>am not</b> tired.、She <b>isn't</b> here.、They <b>aren't</b> ready.</td></tr>
+          <tr><td>一般動詞（現在）</td><td><b>don't / doesn't</b> + 原形</td><td>I <b>don't</b> like tea.、He <b>doesn't</b> like tea.</td></tr>
+          <tr><td>一般動詞（過去）</td><td><b>didn't</b> + 原形</td><td>We <b>didn't</b> go to work yesterday.</td></tr>
+        </table></div>
+        <div class="tip"><b>記憶技巧：</b>be 動詞直接在後面加 not；一般動詞請 don't / doesn't / didn't 幫忙。<b>am not 沒有縮寫</b>（沒有 amn't），只能寫 I'm not。</div>
+      </div>
+      <div class="card">
+        <h3>2. be 動詞的縮寫</h3>
+        <div class="tablewrap"><table>
+          <tr><th>完整</th><th>縮寫</th><th>否定縮寫</th></tr>
+          <tr><td>I am</td><td>I'm</td><td>I'm not</td></tr>
+          <tr><td>you are / we are / they are</td><td>you're / we're / they're</td><td>aren't</td></tr>
+          <tr><td>he is / she is / it is</td><td>he's / she's / it's</td><td>isn't</td></tr>
+          <tr><td>was not / were not</td><td>—</td><td>wasn't / weren't</td></tr>
+        </table></div>
+        <div class="tip"><b>記憶技巧：</b><b>it's</b> = it is（它是），<b>its</b> = 它的；<b>they're</b> = they are，<b>their</b> = 他們的。</div>
+      </div>
+      <div class="card">
+        <h3>3. There is / There are（有）</h3>
+        <ul>
+          <li>看<b>後面第一個名詞</b>決定 is 或 are：There <b>is</b> a printer. / There <b>are</b> two printers.</li>
+          <li>不可數名詞用 is：There <b>is</b> some water.</li>
+          <li>疑問句：<b>Is there</b> a meeting today? / <b>Are there</b> any supplies?</li>
+          <li>過去式：There <b>was</b> / There <b>were</b>。</li>
+        </ul>
+        <div class="tip"><b>記憶技巧：</b>「<b>There 不是主詞，主詞躲在後面</b>」—— 往後看名詞是一個還是很多個。</div>
+      </div>
+      <div class="card">
+        <h3>4. 現在進行式：be + V-ing</h3>
+        <ul>
+          <li>表示「正在做」：I <b>am working</b>.、She <b>is typing</b>.、They <b>are talking</b>.</li>
+          <li>疑問句：<b>Are</b> you <b>working</b> now?</li>
+          <li>否定句：He <b>isn't working</b> today.</li>
+          <li>V-ing 規則：一般 + ing（work → working）、去 e + ing（write → writing）、短母音重複字尾（run → running、sit → sitting）。</li>
+        </ul>
+        <div class="tip"><b>記憶技巧：</b>進行式是「<b>be 與 ing 一定成對出現</b>」，缺一個都錯：I working ✗、I am work ✗。</div>
+      </div>
+      <div class="card">
+        <h3>5. 常見錯誤對照</h3>
+        <div class="tablewrap"><table>
+          <tr><th>錯誤 ✗</th><th>正確 ✓</th><th>原因</th></tr>
+          <tr><td>I is a student.</td><td>I <b>am</b> a student.</td><td>I 只能配 am</td></tr>
+          <tr><td>He are my boss.</td><td>He <b>is</b> my boss.</td><td>he 是第三人稱單數</td></tr>
+          <tr><td>She go to work.</td><td>She <b>goes</b> to work.</td><td>第三人稱單數加 -es</td></tr>
+          <tr><td>I am go to school.</td><td>I <b>go</b> to school.</td><td>be 動詞與一般動詞不能並用</td></tr>
+          <tr><td>Does he works here?</td><td>Does he <b>work</b> here?</td><td>Does 後動詞回原形</td></tr>
+          <tr><td>Are you like coffee?</td><td><b>Do</b> you like coffee?</td><td>like 是一般動詞，用 Do 問</td></tr>
+          <tr><td>Where the restroom is?</td><td>Where <b>is the restroom</b>?</td><td>疑問句 be 動詞要放主詞前</td></tr>
+          <tr><td>There are a book.</td><td>There <b>is</b> a book.</td><td>a book 是單數</td></tr>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- 模擬試題 -->
+    <div id="gram-mock" class="gram-part" hidden></div>
+  </div>
 </section>
 
 <!-- ========== 手寫筆記整理 ========== -->
@@ -751,6 +913,45 @@ const EN_QUIZ = [
  {q:"Choose the correct sentence.",o:["Users is responsible for AI content.","Users are responsible for AI content.","Users am responsible for AI content.","Users be responsible for AI content."],a:[1],e:"Users 是複數，be 動詞用 are。",t:"複數通通都用 are。"}
 ];
 
+/* 主動詞、疑問句、文法 模擬試題 */
+const GRAM_QUIZ = [
+ {q:"I ___ a student.",o:["am","is","are","be"],a:[0],fix:true,e:"主詞 I 只能配 am。",t:"I 用 am。"},
+ {q:"She ___ my English teacher.",o:["am","is","are","be"],a:[1],fix:true,e:"she 是第三人稱單數，be 動詞用 is。",t:"is 給他她它。"},
+ {q:"They ___ in the meeting room.",o:["am","is","are","be"],a:[2],fix:true,e:"they 是複數，be 動詞用 are。",t:"are 給你們大家。"},
+ {q:"My brother and I ___ busy today.",o:["am","is","are","was"],a:[2],fix:true,e:"「My brother and I」= we，兩個人是複數，用 are。不要被最靠近的 I 騙了。",t:"and 連接兩個人 → 複數 → are。"},
+ {q:"The information ___ very useful.",o:["is","are","am","were"],a:[0],fix:true,e:"information 是不可數名詞，視為單數，用 is。",t:"不可數（water、information、money）→ is。"},
+ {q:"Everyone ___ here now.",o:["are","is","am","were"],a:[1],fix:true,e:"everyone 雖然指很多人，但文法上是單數，用 is。",t:"every- 是一個一個算 → 單數。"},
+ {q:"One of my coworkers ___ from Japan.",o:["are","is","am","were"],a:[1],fix:true,e:"主詞是 One（一個），of my coworkers 只是修飾，所以用 is。",t:"one of… 看 one → 單數。"},
+ {q:"Yesterday I ___ very tired.",o:["am","was","were","is"],a:[1],fix:true,e:"Yesterday 是過去，I 的過去式 be 動詞是 was。",t:"am、is → was；are → were。"},
+ {q:"We ___ at home last night.",o:["was","were","are","is"],a:[1],fix:true,e:"last night 是過去，we 的過去式 be 動詞是 were。",t:"are 的過去式是 were。"},
+ {q:"He ___ to work by bus every day.",o:["go","goes","going","is go"],a:[1],fix:true,e:"he 是第三人稱單數，every day 是現在簡單式，go 字尾 o 加 -es → goes。",t:"他她它，動詞要加 s（o 結尾加 es）。"},
+ {q:"下列哪一句是「錯誤」的？",o:["I am a nurse.","I go to school.","I am go to school.","I am going to school."],a:[2],e:"am（be 動詞）和 go（一般動詞）不能同時當主要動詞。應改為 I go… 或 I am going…。",t:"一句一個主要動詞，am 和 go 會打架。"},
+ {q:"___ she a nurse?",o:["Do","Does","Is","Are"],a:[2],fix:true,e:"句中沒有一般動詞，a nurse 是名詞，所以用 be 動詞；she 配 is。",t:"be 動詞自己跳到前面。"},
+ {q:"___ you like coffee?",o:["Are","Do","Does","Is"],a:[1],fix:true,e:"like 是一般動詞，主詞 you，用 Do 來問。",t:"一般動詞請 Do / Does / Did 幫忙。"},
+ {q:"___ your manager speak English?",o:["Do","Does","Is","Are"],a:[1],fix:true,e:"speak 是一般動詞，your manager 是第三人稱單數，用 Does。",t:"第三人稱單數 → Does。"},
+ {q:"___ they finish the report yesterday?",o:["Do","Does","Did","Were"],a:[2],fix:true,e:"yesterday 是過去，finish 是一般動詞，用 Did，後面動詞用原形。",t:"過去的一般動詞 → Did。"},
+ {q:"Does he ___ in Taipei?",o:["live","lives","living","lived"],a:[0],fix:true,e:"Does 已經表示第三人稱單數與現在式，後面的動詞要回原形 live。",t:"助動詞出現，動詞回原形。"},
+ {q:"Is Tom your colleague? — Yes, he ___.",o:["is","does","he's","are"],a:[0],fix:true,e:"用 Is 問就用 is 答；肯定簡答不可縮寫，所以不能寫 he's。",t:"用什麼問就用什麼答；Yes 的簡答不縮寫。"},
+ {q:"Are you a receptionist? — No, I ___.",o:["am not","aren't","isn't","don't"],a:[0],fix:true,e:"問 you 要用 I 回答，I 配 am，否定為 am not（I'm not）。",t:"問 you 答 I；am not 沒有縮寫成 amn't。"},
+ {q:"Do they work here? — Yes, they ___.",o:["are","do","does","work"],a:[1],fix:true,e:"用 Do 問就用 do 答。",t:"Do → do。"},
+ {q:"___ is the restroom? — It's upstairs.",o:["What","Where","When","Who"],a:[1],fix:true,e:"回答是地點（upstairs 樓上），所以問 Where。",t:"問地點 → Where。"},
+ {q:"___ is your name? — My name is Amy.",o:["What","Who","How","Which"],a:[0],fix:true,e:"問名字用 What。",t:"What is your name? 是固定說法。"},
+ {q:"___ are you late? — Because the bus was late.",o:["How","Why","When","What"],a:[1],fix:true,e:"回答用 Because（因為），所以問 Why。",t:"Because 答 Why。"},
+ {q:"___ do you go to work? — By bus.",o:["How","What","Where","Who"],a:[0],fix:true,e:"By bus 是方式，問「如何」用 How。",t:"問方式、交通工具 → How。"},
+ {q:"___ chairs are there in the room? — There are six.",o:["How much","How many","How old","How long"],a:[1],fix:true,e:"chairs 是可數名詞複數，問數量用 How many。",t:"可數 → How many；不可數 / 價錢 → How much。"},
+ {q:"There ___ a printer in the office.",o:["is","are","am","be"],a:[0],fix:true,e:"There is / are 看後面的名詞；a printer 是單數，用 is。",t:"There 不是主詞，往後看名詞。"},
+ {q:"There ___ three meeting rooms on this floor.",o:["is","are","was","am"],a:[1],fix:true,e:"three meeting rooms 是複數，用 are。",t:"後面很多個 → are。"},
+ {q:"___ there any supplies in the closet?",o:["Is","Are","Do","Does"],a:[1],fix:true,e:"supplies 是複數，There are 改疑問句 → Are there…?",t:"There are → Are there?"},
+ {q:"She ___ at the front desk now. （否定）",o:["isn't","doesn't","don't","aren't"],a:[0],fix:true,e:"at the front desk 是地點，句子用 be 動詞；she 配 is，否定為 isn't。",t:"be 動詞否定直接加 not。"},
+ {q:"He ___ like coffee. （否定）",o:["isn't","don't","doesn't","not"],a:[2],fix:true,e:"like 是一般動詞，he 是第三人稱單數，否定用 doesn't + 原形。",t:"一般動詞否定請 don't / doesn't 幫忙。"},
+ {q:"They ___ working on the project right now.",o:["is","are","do","does"],a:[1],fix:true,e:"right now 表示正在做，用現在進行式 be + V-ing；they 配 are。",t:"be 和 ing 一定成對出現。"},
+ {q:"把「He is a manager.」改成疑問句，正確的是？",o:["Does he a manager?","Is he a manager?","He is a manager?","Do he is a manager?"],a:[1],e:"be 動詞句改疑問句，把 is 搬到句首：Is he a manager?",t:"be 動詞自己跳到前面。"},
+ {q:"把「She works in HR.」改成疑問句，正確的是？",o:["Is she works in HR?","Does she works in HR?","Does she work in HR?","Do she work in HR?"],a:[2],e:"一般動詞句用 Does 問，works 回原形 work。",t:"Does 把 s 拿走。"},
+ {q:"下列哪一句疑問句是正確的？",o:["Where the meeting room is?","Where is the meeting room?","Where does the meeting room is?","Where are the meeting room?"],a:[1],e:"Wh- 疑問句：疑問詞 + be 動詞 + 主詞；meeting room 是單數，用 is。",t:"疑問詞 + be + 主詞 + …?"},
+ {q:"I ___ not a teacher.",o:["am","is","are","do"],a:[0],fix:true,e:"I 配 am，否定 am not。",t:"I 用 am。"},
+ {q:"___ your parents at home now?",o:["Is","Are","Do","Does"],a:[1],fix:true,e:"your parents 是複數，at home 是地點（be 動詞），用 Are。",t:"複數 → Are。"}
+];
+
 const SENTENCES = [
  ["I use ChatGPT to summarize my notes.","我用 ChatGPT 總結我的筆記。","主格 I、所有格 my"],
  ["You should verify the facts yourself.","你應該自己查證事實。","反身代名詞 yourself"],
@@ -1015,7 +1216,8 @@ document.getElementById("bonus-table").innerHTML = DEPTS.map(([group, rows]) => 
 renderQuiz(document.getElementById("bonus-quiz"), "bonus", BONUS_QUIZ, {heading:`加分考題（${BONUS_QUIZ.length} 題）`, track:false});
 renderQuiz(document.getElementById("career-past"), "careerPast", CAREER_PAST, {heading:`測驗 14 題考古題`});
 renderQuiz(document.getElementById("career-extra"), "careerExtra", CAREER_EXTRA, {heading:`延伸練習 20 題`});
-[["en-sub","en"],["notes-sub","notes"],["bonus-sub","bonus"],["career-sub","career"]].forEach(([subId, prefix]) => {
+renderQuiz(document.getElementById("gram-mock"), "gram", GRAM_QUIZ, {heading:`主動詞、疑問句、文法 模擬試題（${GRAM_QUIZ.length} 題）`, track:false});
+[["en-sub","en"],["notes-sub","notes"],["bonus-sub","bonus"],["career-sub","career"],["gram-sub","gram"]].forEach(([subId, prefix]) => {
   document.querySelectorAll(`#${subId} button`).forEach(b => b.onclick = () => {
     document.querySelectorAll(`#${subId} button`).forEach(x => x.classList.toggle("active", x===b));
     document.querySelectorAll(`.${prefix}-part`).forEach(p => p.hidden = p.id !== `${prefix}-${b.dataset.s}`);
@@ -1031,7 +1233,7 @@ document.getElementById("copy-prompt").onclick = async (e) => {
 refreshWrongCount();
 
 /* ===== 關鍵字搜尋 ===== */
-const SUMMARY_SNIPPETS = [...document.querySelectorAll("#p-summary li, #p-summary tr, #p-summary .tip, #en-pron .tip, #en-verb tr, #en-verb .tip, #p-notes tr, #p-notes li, #p-notes .tip, #notes-prompt, #p-bonus tr, #p-bonus li, #career-summary li, #career-summary tr, #career-summary .tip")]
+const SUMMARY_SNIPPETS = [...document.querySelectorAll("#p-summary li, #p-summary tr, #p-summary .tip, #en-pron .tip, #en-verb tr, #en-verb .tip, #p-notes tr, #p-notes li, #p-notes .tip, #notes-prompt, #p-bonus tr, #p-bonus li, #career-summary li, #career-summary tr, #career-summary .tip, #gram-subj tr, #gram-subj li, #gram-subj .tip, #gram-ques tr, #gram-ques .tip, #gram-rule tr, #gram-rule li, #gram-rule .tip")]
   .filter(el => !el.querySelector("th"))
   .map(el => {
     const sec = el.closest("section");
@@ -1044,6 +1246,7 @@ const SUMMARY_SNIPPETS = [...document.querySelectorAll("#p-summary li, #p-summar
 const ALL_Q = [];
 Object.keys(BANK).forEach(k => BANK[k].items.forEach((it,i) => ALL_Q.push({...it, _k:k, _i:i, _src:BANK[k].short})));
 EN_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"en", _i:i, _src:"英文考題"}));
+GRAM_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"gram", _i:i, _src:"英文文法模擬題"}));
 NOTES_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"notes", _i:i, _src:"手寫筆記測驗"}));
 BONUS_QUIZ.forEach((it,i) => ALL_Q.push({...it, _k:"bonus", _i:i, _src:"加分題"}));
 Object.keys(CAREER_SETS).forEach(k => CAREER_SETS[k].items.forEach((it,i) => ALL_Q.push({...it, _k:k, _i:i, _src:CAREER_SETS[k].short})));
